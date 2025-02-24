@@ -29,3 +29,5 @@ $result = mysqli_query($conn, $sql);
         </tr>
     <?php endwhile; ?>
 </table>
+
+<a href="inventory.php"> Inventory </a>
