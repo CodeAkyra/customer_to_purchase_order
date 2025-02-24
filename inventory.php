@@ -32,7 +32,6 @@ $result = mysqli_query($conn, $sql); {
 
 ?>
 
-<<<<<<< HEAD
 <a href="index.php"> Customer Information </a>
 
 
@@ -42,7 +41,6 @@ $result = mysqli_query($conn, $sql); {
 <!-- Must be able to add quantity to the same product na existing -->
 <!-- Must notify user when the product is low or depleting -->
 <!-- Implement Batch No. and Serial Code with barcode scanning (gamitin yung scratch it cards as an example) -->
-=======
 
-<a href="index.php"> Customer Information </a>
->>>>>>> 3dd112024d9196ebcbe8fe1647c1013cfb09ef5d
+
+<!-- nakalimutan mag pull woops new learnings -->
