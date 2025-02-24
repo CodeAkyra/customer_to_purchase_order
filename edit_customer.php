@@ -1,6 +1,7 @@
 <?php
 include "conn.php";
-$id = $_GET["id"];
+$id = intval($_GET["id"]); // Converts to an integer (prevents SQL injection)
+
 $customer = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM customers WHERE id = $id"));
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
