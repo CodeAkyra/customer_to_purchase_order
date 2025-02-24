@@ -3,7 +3,7 @@ include "conn.php";
 $po_id = $_GET['id'];
 
 // Fetch purchase order details
-$orderQuery = "SELECT po.id, po.customer_id, c.name, po.order_date, po.status 
+$orderQuery = "SELECT po.id, po.customer_id, c.name, c.address, po.order_date, po.status 
                FROM purchase_orders po
                JOIN customers c ON po.customer_id = c.id 
                WHERE po.id = $po_id";
@@ -51,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <h2>Order Details</h2>
 <p><strong>Customer:</strong> <?= $order['name'] ?></p>
+<p><strong>Address:</strong> <?= $order['address'] ?></p>
 <p><strong>Date:</strong> <?= $order['order_date'] ?></p>
 <p><strong>Status:</strong> <?= $order['status'] ?></p>
 <p><strong>Total Price:</strong> <?= number_format($total_price, 2) ?></p>
