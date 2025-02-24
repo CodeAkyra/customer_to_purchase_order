@@ -34,6 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <h2>Create Purchase Order</h2>
 <p><strong>Customer:</strong> <?= $customer['name'] ?></p>
+<p><strong>Address:</strong> <?= $customer['address'] ?></p>
 
 <form method="post">
     <h3>Select Products</h3>

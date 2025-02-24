@@ -2,7 +2,7 @@
 include "conn.php";
 
 // Fetch customers
-$sql = "SELECT id, name, email FROM customers";
+$sql = "SELECT id, name, email, address FROM customers";
 $result = mysqli_query($conn, $sql);
 ?>
 
@@ -21,6 +21,7 @@ $result = mysqli_query($conn, $sql);
             <td><?= $row["id"] ?></td>
             <td><?= $row["name"] ?></td>
             <td><?= $row["email"] ?></td>
+            <td><?= $row["address"] ?></td>
             <td>
                 <a href="edit_customer.php?id=<?= $row["id"] ?>" class="btn btn-warning">Edit</a>
                 <a href="view_history.php?id=<?= $row["id"] ?>" class="btn btn-info">View History</a>

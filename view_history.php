@@ -12,8 +12,15 @@ $sql = "SELECT po.id, po.order_date, po.status,
 $result = mysqli_query($conn, $sql);
 ?>
 
+<?php
 
-<h2>Purchase History</h2>
+$sql = "SELECT name FROM customers WHERE id = $id";
+$fetch_result = mysqli_query($conn, $sql);
+$fetch_name = mysqli_fetch_assoc($fetch_result);
+
+?>
+
+<h2>Purchase History of <?php echo $fetch_name['name'] ?></h2>
 <table class="table">
     <tr>
         <th>ID</th>
