@@ -7,7 +7,7 @@ include "conn.php";
 
 $sql = "SELECT * FROM products";
 $result = mysqli_query($conn, $sql); {
-    echo "<table>";
+    echo "<table class='table'>";
     echo "<tr>
     <th>ID</th>
     <th>Name</th>
@@ -31,5 +31,6 @@ $result = mysqli_query($conn, $sql); {
 }
 
 ?>
+
 
 <a href="index.php"> Customer Information </a>
