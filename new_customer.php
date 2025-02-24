@@ -14,7 +14,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <form method="post">
     Name: <input type="text" name="name" required><br>
     Email: <input type="email" name="email" required><br>
-    <button type="submit">Save</button>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="index.php" class="btn btn-secondary">Back</a>
 </form>
-
-<a href="index.php" class="btn btn-secondary">Back</a>

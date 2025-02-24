@@ -55,7 +55,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endwhile; ?>
     </table>
 
-    <button type="submit" class="btn btn-success">Submit PO</button>
+    <button type="submit" class="btn btn-success">Create PO</button>
+    <a href="index.php" class="btn btn-secondary">Back</a>
 </form>
-
-<a href="index.php" class="btn btn-secondary">Back</a>
