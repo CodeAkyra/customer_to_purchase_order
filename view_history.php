@@ -1,9 +1,13 @@
+<title>
+    View Purchase History
+</title>
+
 <?php
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-include "conn.php";
+include "includes/conn.php";
 $id = $_GET["id"];
 
 $sql = "SELECT po.id, po.order_date, po.status, 
@@ -24,6 +28,7 @@ $fetch_name = mysqli_fetch_assoc($fetch_result);
 <table class="table">
     <tr>
         <th>ID</th>
+        <th>Purchase Order ID</th>
         <th>Date</th>
         <th>Total Price</th>
         <th>Status</th>
@@ -32,6 +37,7 @@ $fetch_name = mysqli_fetch_assoc($fetch_result);
     <?php while ($row = mysqli_fetch_assoc($result)): ?>
         <tr>
             <td><?= $row["id"] ?></td>
+            <td>NULL</td>
             <td><?= $row["order_date"] ?></td>
             <td><?= $row["total_price"] ?></td>
             <td><?= $row["status"] ?></td>
@@ -43,3 +49,9 @@ $fetch_name = mysqli_fetch_assoc($fetch_result);
 </table>
 
 <a href="index.php" class="btn btn-secondary">Back</a>
+
+<?php
+
+include "includes/footer.php";
+
+?>

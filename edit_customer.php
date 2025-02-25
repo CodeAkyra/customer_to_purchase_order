@@ -1,5 +1,9 @@
+<title>
+    Edit Customer
+</title>
+
 <?php
-include "conn.php";
+include "includes/conn.php";
 $id = intval($_GET["id"]); // Converts to an integer (prevents SQL injection)
 
 $customer = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM customers WHERE id = $id"));
@@ -22,3 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <button type="submit" class="btn btn-primary">Update</button>
     <a href="index.php" class="btn btn-secondary">Back</a>
 </form>
+
+<?php
+
+include "includes/footer.php";
+
+?>

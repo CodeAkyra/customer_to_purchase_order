@@ -1,5 +1,9 @@
+<title>
+    View Purchase Order
+</title>
+
 <?php
-include "conn.php";
+include "includes/conn.php";
 $po_id = $_GET['id'];
 
 // Fetch purchase order details
@@ -12,7 +16,7 @@ $orderResult = mysqli_query($conn, $orderQuery);
 $order = mysqli_fetch_assoc($orderResult);
 
 // Fetch order items
-$itemsQuery = "SELECT p.id, p.name, oi.quantity, oi.price, oi.subtotal 
+$itemsQuery = "SELECT p.id, p.serial_code, p.lot_no, p.name, oi.quantity, oi.price, oi.subtotal 
                FROM purchase_order_items oi
                JOIN products p ON oi.product_id = p.id 
                WHERE oi.po_id = $po_id";
@@ -49,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<h2>Order Details</h2>
+<h2>Purchase Order Details</h2>
 <p><strong>Customer:</strong> <?= $order['name'] ?></p>
 <p><strong>Address:</strong> <?= $order['address'] ?></p>
 <p><strong>Date:</strong> <?= $order['order_date'] ?></p>
@@ -59,7 +63,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <h3>Products</h3>
 <table class="table">
     <tr>
-        <th>Product</th>
+        <th>Serial Code</th>
+        <th>Lot Number</th>
+        <th>Product Name</th>
         <th>Quantity</th>
         <th>Price</th>
         <th>Subtotal</th>
@@ -67,6 +73,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php if (!empty($items)): ?>
         <?php foreach ($items as $row): ?>
             <tr>
+                <td><?= $row["serial_code"] ?></td>
+                <td><?= $row["lot_no"] ?></td>
                 <td><?= $row["name"] ?></td>
                 <td><?= $row["quantity"] ?></td>
                 <td><?= number_format($row["price"], 2) ?></td>
@@ -90,3 +98,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php endif; ?>
 
 <a href="view_history.php?id=<?= $order['customer_id'] ?>" class="btn btn-secondary">Back</a>
+
+
+<?php
+
+include "includes/footer.php";
+
+?>

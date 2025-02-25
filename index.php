@@ -1,5 +1,9 @@
+<title>
+    Customer Information
+</title>
+
 <?php
-include "conn.php";
+include "includes/conn.php";
 
 // Fetch customers
 $sql = "SELECT id, name, email, address FROM customers";
@@ -14,6 +18,7 @@ $result = mysqli_query($conn, $sql);
         <th>ID</th>
         <th>Name</th>
         <th>Email</th>
+        <th>Address</th>
         <th>Actions</th>
     </tr>
     <?php while ($row = mysqli_fetch_assoc($result)): ?>
@@ -31,4 +36,11 @@ $result = mysqli_query($conn, $sql);
     <?php endwhile; ?>
 </table>
 
-<a href="inventory.php"> Inventory </a>
+<a href="inventory.php" class="btn btn-primary"> Inventory </a>
+<a href="dashboard.php" class="btn btn-primary"> Dashboard </a>
+
+<?php
+
+include "includes/footer.php";
+
+?>
