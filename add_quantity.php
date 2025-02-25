@@ -1,7 +1,7 @@
 <title>Add Quantity</title>
 
 <?php
-include "includes/conn.php";
+require "includes/conn.php";
 
 // Get serial_code and lot_no from GET request
 $serial_code = $_GET["serial_code"] ?? null;

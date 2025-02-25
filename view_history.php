@@ -7,7 +7,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-include "includes/conn.php";
+require "includes/conn.php";
 $id = $_GET["id"];
 
 $sql = "SELECT po.id, po.order_date, po.status, 

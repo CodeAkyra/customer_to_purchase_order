@@ -1,6 +1,6 @@
 <title>Inventory</title>
 
-<?php include "includes/conn.php"; ?>
+<?php require "includes/conn.php"; ?>
 
 <h2>Inventory</h2>
 

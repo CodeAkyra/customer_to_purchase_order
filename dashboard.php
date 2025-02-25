@@ -1,7 +1,7 @@
 <title>Dashboard</title>
 
 <?php
-include "includes/conn.php";
+require "includes/conn.php";
 
 // Query to count products below maintaining level
 $queryLowStock = "SELECT COUNT(*) AS low_stock_count FROM products WHERE stock < maintaining_level";

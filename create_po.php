@@ -3,7 +3,7 @@
 </title>
 
 <?php
-include "includes/conn.php";
+require "includes/conn.php";
 $customer_id = $_GET['customer_id'];
 
 // Fetch customer details

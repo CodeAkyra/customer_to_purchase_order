@@ -3,7 +3,7 @@
 </title>
 
 <?php
-include "includes/conn.php";
+require "includes/conn.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST["name"];

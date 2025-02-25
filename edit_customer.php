@@ -3,7 +3,7 @@
 </title>
 
 <?php
-include "includes/conn.php";
+require "includes/conn.php";
 $id = intval($_GET["id"]); // Converts to an integer (prevents SQL injection)
 
 $customer = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM customers WHERE id = $id"));

@@ -3,7 +3,7 @@
 </title>
 
 <?php
-include "includes/conn.php";
+require "includes/conn.php";
 
 // Fetch customers
 $sql = "SELECT id, name, email, address FROM customers";

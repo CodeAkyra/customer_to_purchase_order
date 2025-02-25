@@ -3,7 +3,7 @@
 </title>
 
 <?php
-include "includes/conn.php";
+require "includes/conn.php";
 $po_id = $_GET['id'];
 
 // Fetch purchase order details
