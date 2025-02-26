@@ -1,6 +1,4 @@
-<title>
-    Create Purchase Order
-</title>
+<title>Create Purchase Order</title>
 
 <?php
 require "includes/conn.php";
@@ -15,10 +13,17 @@ $customer = mysqli_fetch_assoc($customerResult);
 $productQuery = "SELECT * FROM products";
 $productResult = mysqli_query($conn, $productQuery);
 
+// Fetch active projects for this customer (Only projects that haven't ended)
+$projectQuery = "SELECT * FROM project WHERE customer_id = $customer_id AND date_ended IS NULL";
+$projectResult = mysqli_query($conn, $projectQuery);
+
 // Handle PO Submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date = date("Y-m-d H:i:s");
-    mysqli_query($conn, "INSERT INTO purchase_orders (customer_id, order_date, status) VALUES ($customer_id, '$date', 'Pending')");
+    $project_id = $_POST['project_id'];
+
+    mysqli_query($conn, "INSERT INTO purchase_orders (customer_id, project_id, order_date, status) 
+                         VALUES ($customer_id, $project_id, '$date', 'Pending')");
     $po_id = mysqli_insert_id($conn);
 
     foreach ($_POST['products'] as $product_id => $quantity) {
@@ -41,6 +46,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <p><strong>Address:</strong> <?= $customer['address'] ?></p>
 
 <form method="post">
+    <h3>Select Project</h3>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <select name="project_id" class="form-control" required>
+            <option value="" disabled selected>Select a project</option>
+            <?php while ($project = mysqli_fetch_assoc($projectResult)): ?>
+                <option value="<?= $project['project_id'] ?>"><?= $project['project_name'] ?></option>
+            <?php endwhile; ?>
+        </select>
+        <a href="create_project.php?customer_id=<?= $customer_id ?>" class="btn btn-primary">Create New Project</a>
+    </div>
+
     <h3>Select Products</h3>
     <table class="table">
         <tr>
@@ -69,12 +85,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <a href="index.php" class="btn btn-secondary">Back</a>
 </form>
 
-<?php
-
-include "includes/footer.php";
-
-?>
-
-
-<!-- Dapat meron isang column where in parang PO_ID, tapos unique siya -->
-<!-- combination dapat siya ng po number, year date ata, tapos limot ko na yung isa then yun yung magiging po_id -->
+<?php include "includes/footer.php"; ?>

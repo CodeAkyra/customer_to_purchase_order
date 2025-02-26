@@ -1,15 +1,15 @@
-<title>
-    View Purchase Order
-</title>
+<title>View Purchase Order</title>
 
 <?php
 require "includes/conn.php";
 $po_id = $_GET['id'];
 
-// Fetch purchase order details
-$orderQuery = "SELECT po.id, po.customer_id, c.name, c.address, po.order_date, po.status 
+// Fetch purchase order details with project details
+$orderQuery = "SELECT po.id, po.customer_id, c.name, c.address, po.order_date, po.status, 
+                      p.project_name, p.date_started, p.date_ended
                FROM purchase_orders po
                JOIN customers c ON po.customer_id = c.id 
+               JOIN project p ON po.project_id = p.project_id
                WHERE po.id = $po_id";
 
 $orderResult = mysqli_query($conn, $orderQuery);
@@ -56,11 +56,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <h2>Purchase Order Details</h2>
 <p><strong>Customer:</strong> <?= $order['name'] ?></p>
 <p><strong>Address:</strong> <?= $order['address'] ?></p>
-<p><strong>Date:</strong> <?= $order['order_date'] ?></p>
-<p><strong>Status:</strong> <?= $order['status'] ?></p>
+<p><strong>Project Name:</strong> <?= $order['project_name'] ?></p>
+<p><strong>Project Date Started:</strong> <?= $order['date_started'] ?></p>
+<p><strong>Project Date Ended:</strong> <?= $order['date_ended'] ?></p>
+<p><strong>Purchase Order Date:</strong> <?= $order['order_date'] ?></p>
+<p><strong>Purchase Order Status:</strong> <?= $order['status'] ?></p>
 <p><strong>Total Price:</strong> <?= number_format($total_price, 2) ?></p>
 
-<h3>Products</h3>
+<h3>Order List</h3>
 <table class="table">
     <tr>
         <th>Serial Code</th>
@@ -83,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endforeach; ?>
     <?php else: ?>
         <tr>
-            <td colspan="4" class="text-center">No products found for this order.</td>
+            <td colspan="6" class="text-center">No products found for this order.</td>
         </tr>
     <?php endif; ?>
 </table>
@@ -99,9 +102,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <a href="view_history.php?id=<?= $order['customer_id'] ?>" class="btn btn-secondary">Back</a>
 
-
 <?php
-
 include "includes/footer.php";
-
 ?>

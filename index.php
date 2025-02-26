@@ -10,7 +10,7 @@ $sql = "SELECT id, name, email, address FROM customers";
 $result = mysqli_query($conn, $sql);
 ?>
 
-<h2>Customer Management</h2>
+<h2>CUSTOMER MANAGEMENT</h2>
 <a href="new_customer.php" class="btn btn-success">New Customer</a>
 
 <table class="table">
@@ -36,9 +36,12 @@ $result = mysqli_query($conn, $sql);
     <?php endwhile; ?>
 </table>
 
-<a href="inventory.php" class="btn btn-primary"> Inventory </a>
-<a href="dashboard.php" class="btn btn-primary"> Dashboard </a>
-<a href="project.php" class="btn btn-primary"> Project </a>
+<div class="text-center mt-3">
+    <a href="dashboard.php" class="btn btn-primary">Dashboard</a>
+    <a href="inventory.php" class="btn btn-primary">Inventory</a>
+    <a href="index.php" class="btn btn-primary">Customer Information</a>
+    <a href="project.php" class="btn btn-primary"> Project </a>
+</div>
 
 <?php
 

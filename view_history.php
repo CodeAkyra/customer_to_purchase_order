@@ -34,9 +34,9 @@ $fetch_name = mysqli_fetch_assoc($fetch_result);
 <h2>Purchase History of <?php echo $fetch_name['name'] ?></h2>
 <table class="table">
     <tr>
-        <th>ID</th>
+        <th>Purchase Order ID</th> <!-- Purchase Order ID dapat toh -->
         <th>Project Name</th>
-        <th>Date</th>
+        <th>Purchase Order Date</th>
         <th>Total Price</th>
         <th>Status</th>
         <th>Action</th>
