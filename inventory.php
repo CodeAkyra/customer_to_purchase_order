@@ -39,6 +39,7 @@ echo "</table>";
 
 <a href="index.php" class="btn btn-primary">Customer Information</a>
 <a href="dashboard.php" class="btn btn-primary"> Dashboard </a>
+<a href="project.php" class="btn btn-primary"> Project </a>
 
 <!-- Search Product -->
 <form action="" method="get">

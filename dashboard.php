@@ -43,6 +43,7 @@ $totalCustomers = $rowCustomers["total_customers"];
 
     <a href="inventory.php" class="btn btn-primary">Go to Inventory</a>
     <a href="index.php" class="btn btn-primary">Customer Information</a>
+    <a href="project.php" class="btn btn-primary"> Project </a>
 </body>
 
 </html>

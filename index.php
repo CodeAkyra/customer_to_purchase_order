@@ -38,6 +38,7 @@ $result = mysqli_query($conn, $sql);
 
 <a href="inventory.php" class="btn btn-primary"> Inventory </a>
 <a href="dashboard.php" class="btn btn-primary"> Dashboard </a>
+<a href="project.php" class="btn btn-primary"> Project </a>
 
 <?php
 

@@ -10,9 +10,16 @@ header("Pragma: no-cache");
 require "includes/conn.php";
 $id = $_GET["id"];
 
-$sql = "SELECT po.id, po.order_date, po.status, 
+// $sql = "SELECT po.id, po.order_date, po.status, 
+//         (SELECT SUM(subtotal) FROM purchase_order_items WHERE po_id = po.id) AS total_price
+//         FROM purchase_orders po WHERE customer_id = $id";
+
+$sql = "SELECT po.id, po.order_date, po.status, p.project_name,
         (SELECT SUM(subtotal) FROM purchase_order_items WHERE po_id = po.id) AS total_price
-        FROM purchase_orders po WHERE customer_id = $id";
+        FROM purchase_orders po
+        LEFT JOIN project p ON po.project_id = p.project_id
+        WHERE po.customer_id = $id";
+
 $result = mysqli_query($conn, $sql);
 ?>
 
@@ -28,7 +35,7 @@ $fetch_name = mysqli_fetch_assoc($fetch_result);
 <table class="table">
     <tr>
         <th>ID</th>
-        <th>Purchase Order ID</th>
+        <th>Project Name</th>
         <th>Date</th>
         <th>Total Price</th>
         <th>Status</th>
@@ -37,7 +44,7 @@ $fetch_name = mysqli_fetch_assoc($fetch_result);
     <?php while ($row = mysqli_fetch_assoc($result)): ?>
         <tr>
             <td><?= $row["id"] ?></td>
-            <td>NULL</td>
+            <td><?= $row["project_name"] ?></td>
             <td><?= $row["order_date"] ?></td>
             <td><?= $row["total_price"] ?></td>
             <td><?= $row["status"] ?></td>
