@@ -9,7 +9,9 @@
 </button>
 
 <!-- Add Product Modal -->
+
 <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -18,10 +20,10 @@
             </div>
             <div class="modal-body">
                 <form action="" method="post">
-                    <label>Serial Code</label>
+                    <label>Serial Code</label> <span style="color: #ADADAD;">*Connect a barcode scanner for quicker input*</span>
                     <input type="text" name="serial_code" class="form-control" required placeholder="Enter Serial Code">
 
-                    <label>Lot Number</label>
+                    <label>Lot Number</label> <span style="color: #ADADAD;">*Connect a barcode scanner for quicker input*</span>
                     <input type="text" name="lot_no" class="form-control" required placeholder="Enter Lot Number">
 
                     <label>Name</label>

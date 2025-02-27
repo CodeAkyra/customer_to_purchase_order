@@ -48,3 +48,31 @@ $result = mysqli_query($conn, $sql);
 include "includes/footer.php";
 
 ?>
+
+<!-- 
+
+- Hindi pa updated yung (customers) sa db
+- New table added in db (contact_person)
+baka ipaloob ko nalang yung attachments sa (customers) or ewan, hindi ko pa alam ano magandang approach.
+
+meron na ko prototype for uploading files ".pdf", pero iniistore niya locally, mas maganda if yung pdf
+is na sstore mismo sa database.
+
+Customer Information:
+TIN No:
+Customer Name:
+Tel. No:
+Cellphone No:
+Email:
+Address:
+
+Contact Person Information:
+Contact Person Name:
+Tel. No:
+Cellphone No.
+Email:
+
+Uploads:
+Attachments
+
+-->

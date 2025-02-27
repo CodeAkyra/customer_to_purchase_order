@@ -178,3 +178,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         doc.save("Purchase_Order_<?= $po_id ?>.pdf");
     }
 </script>
+
+<!-- dapat bawat PO meron unique ID, combination ng Date, -->
