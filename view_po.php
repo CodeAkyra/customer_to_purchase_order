@@ -54,26 +54,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <h2>Purchase Order Details</h2>
-<p><strong>Customer:</strong> <?= $order['name'] ?></p>
-<p><strong>Address:</strong> <?= $order['address'] ?></p>
-<p><strong>Project Name:</strong> <?= $order['project_name'] ?></p>
-<p><strong>Project Date Started:</strong> <?= $order['date_started'] ?></p>
-<p><strong>Project Date Ended:</strong> <?= $order['date_ended'] ?></p>
-<p><strong>Purchase Order Date:</strong> <?= $order['order_date'] ?></p>
-<p><strong>Purchase Order Status:</strong> <?= $order['status'] ?></p>
-<p><strong>Total Price:</strong> <?= number_format($total_price, 2) ?></p>
+<div id="printable_area">
+    <p><strong>Customer:</strong> <?= $order['name'] ?></p>
+    <p><strong>Address:</strong> <?= $order['address'] ?></p>
+    <p><strong>Project Name:</strong> <?= $order['project_name'] ?></p>
+    <p><strong>Project Date Started:</strong> <?= $order['date_started'] ?></p>
+    <p><strong>Project Date Ended:</strong> <?= $order['date_ended'] ?></p>
+    <p><strong>Purchase Order Date:</strong> <?= $order['order_date'] ?></p>
+    <p><strong>Purchase Order Status:</strong> <?= $order['status'] ?></p>
+    <p><strong>Total Price:</strong> <?= number_format($total_price, 2) ?></p>
 
-<h3>Order List</h3>
-<table class="table">
-    <tr>
-        <th>Serial Code</th>
-        <th>Lot Number</th>
-        <th>Product Name</th>
-        <th>Quantity</th>
-        <th>Price</th>
-        <th>Subtotal</th>
-    </tr>
-    <?php if (!empty($items)): ?>
+    <h3>Order List</h3>
+    <table border="1" cellspacing="0" cellpadding="5" width="100%">
+        <tr>
+            <th>Serial Code</th>
+            <th>Lot Number</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+        </tr>
         <?php foreach ($items as $row): ?>
             <tr>
                 <td><?= $row["serial_code"] ?></td>
@@ -84,16 +84,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <td><?= number_format($row["subtotal"], 2) ?></td>
             </tr>
         <?php endforeach; ?>
-    <?php else: ?>
-        <tr>
-            <td colspan="6" class="text-center">No products found for this order.</td>
-        </tr>
-    <?php endif; ?>
-</table>
+    </table>
+</div>
 
-<!-- Show Complete Order button only if the order is not yet completed -->
+<!-- Buttons -->
+<button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
+
+<!-- Complete Order Button (if not yet completed) -->
 <?php if ($order["status"] != "Completed"): ?>
-    <form method="post">
+    <form method="post" style="display: inline;">
         <button type="submit" class="btn btn-success">Complete Order</button>
     </form>
 <?php else: ?>
@@ -102,6 +101,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <a href="view_history.php?id=<?= $order['customer_id'] ?>" class="btn btn-secondary">Back</a>
 
-<?php
-include "includes/footer.php";
-?>
+<!-- Include jsPDF and autoTable -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.21/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+    function downloadPDF() {
+        const {
+            jsPDF
+        } = window.jspdf;
+        let doc = new jsPDF();
+
+        // Title
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+        doc.text("Purchase Order Details", 20, 20);
+
+        // Customer & Order Details
+        let y = 30;
+        let details = [
+            "Customer: <?= $order['name'] ?>",
+            "Address: <?= $order['address'] ?>",
+            "Project Name: <?= $order['project_name'] ?>",
+            "Project Date Started: <?= $order['date_started'] ?>",
+            "Project Date Ended: <?= $order['date_ended'] ?>",
+            "Purchase Order Date: <?= $order['order_date'] ?>",
+            "Purchase Order Status: <?= $order['status'] ?>",
+            "Total Price: <?= number_format($total_price, 2) ?>"
+        ];
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        details.forEach(text => {
+            doc.text(text, 20, y);
+            y += 10;
+        });
+
+        // Table Header
+        y += 10;
+        doc.setFont("helvetica", "bold");
+        doc.text("Order List", 20, y);
+        y += 10;
+
+        // Define table columns and rows
+        let columns = ["Serial Code", "Lot Number", "Product Name", "Quantity", "Price", "Subtotal"];
+        let rows = [
+            <?php foreach ($items as $row): ?>["<?= $row['serial_code'] ?>", "<?= $row['lot_no'] ?>", "<?= $row['name'] ?>", "<?= $row['quantity'] ?>", "<?= number_format($row['price'], 2) ?>", "<?= number_format($row['subtotal'], 2) ?>"],
+            <?php endforeach; ?>
+        ];
+
+        // AutoTable for structured table formatting
+        doc.autoTable({
+            startY: y,
+            head: [columns],
+            body: rows,
+            theme: 'grid',
+            styles: {
+                fontSize: 10
+            },
+            headStyles: {
+                fillColor: [100, 100, 100]
+            }
+        });
+
+        // Save PDF
+        doc.save("Purchase_Order_<?= $po_id ?>.pdf");
+    }
+</script>
