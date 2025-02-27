@@ -5,12 +5,20 @@ require "includes/conn.php";
 $po_id = $_GET['id'];
 
 // Fetch purchase order details with project details
-$orderQuery = "SELECT po.id, po.customer_id, c.name, c.address, po.order_date, po.status, 
-                      p.project_name, p.date_started, p.date_ended
+// $orderQuery = "SELECT po.id, po.customer_id, c.name, c.address, po.order_date, po.status, 
+//                       p.project_name, p.date_started, p.date_ended
+//                FROM purchase_orders po
+//                JOIN customers c ON po.customer_id = c.id 
+//                JOIN project p ON po.project_id = p.project_id
+//                WHERE po.id = $po_id";
+
+$orderQuery = "SELECT po.id, po.customer_id, po.project_id, c.name, c.address, 
+                      po.order_date, po.status, p.project_name, p.date_started, p.date_ended
                FROM purchase_orders po
                JOIN customers c ON po.customer_id = c.id 
                JOIN project p ON po.project_id = p.project_id
                WHERE po.id = $po_id";
+// para bumalik sa project
 
 $orderResult = mysqli_query($conn, $orderQuery);
 $order = mysqli_fetch_assoc($orderResult);
@@ -100,6 +108,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php endif; ?>
 
 <a href="view_history.php?id=<?= $order['customer_id'] ?>" class="btn btn-secondary">Back</a>
+<a href="view_project.php?id=<?= $order['project_id'] ?>" class="btn btn-info">View Project PO</a>
+
 
 <!-- Include jsPDF and autoTable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
