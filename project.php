@@ -40,11 +40,10 @@ $result = mysqli_query($conn, $sql);
         </tr>
     <?php endwhile; ?>
 </table>
-
 <div class="text-center mt-3">
-    <a href="dashboard.php" class="btn btn-primary">Dashboard</a>
+    <a href="index.php" class="btn btn-primary">Dashboard</a>
     <a href="inventory.php" class="btn btn-primary">Inventory</a>
-    <a href="index.php" class="btn btn-primary">Customer Information</a>
+    <a href="customer_information.php" class="btn btn-primary">Customer Information</a>
     <a href="project.php" class="btn btn-primary"> Project </a>
 </div>
 

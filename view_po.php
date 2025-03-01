@@ -179,4 +179,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 </script>
 
-<!-- dapat bawat PO meron unique ID, combination ng Date, -->
+<!-- dapat bawat PO meron unique ID, combination ng Date(YYYY), Name?(not sure) PO_ID siguro, -->
