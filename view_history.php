@@ -55,7 +55,7 @@ $fetch_name = mysqli_fetch_assoc($fetch_result);
     <?php endwhile; ?>
 </table>
 
-<a href="index.php" class="btn btn-secondary">Back</a>
+<a href="customer_information.php" class="btn btn-secondary">Back</a>
 
 <?php
 

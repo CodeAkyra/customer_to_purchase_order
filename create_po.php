@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </table>
 
     <button type="submit" class="btn btn-success">Create PO</button>
-    <a href="index.php" class="btn btn-secondary">Back</a>
+    <a href="customer_information.php" class="btn btn-secondary">Back</a>
 </form>
 
 <?php include "includes/footer.php"; ?>
