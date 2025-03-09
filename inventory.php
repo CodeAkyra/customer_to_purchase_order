@@ -15,7 +15,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+                <h5 class="modal-title" id="addProductModalLabel">Add New Product | Date received <?php echo date('Y-m-d') ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -38,8 +38,12 @@
                     <label>Maintaining Level</label>
                     <input type="number" name="maintaining_level" class="form-control" required placeholder="Enter Maintaining Level">
 
+
+                    <input type="hidden" name="date_received" value="<?php echo date('Y-m-d'); ?>">
+
                     <button type="submit" name="add_product" class="btn btn-success mt-3">Add Product</button>
                 </form>
+
             </div>
         </div>
     </div>
@@ -163,11 +167,14 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
         <th>Price</th>
         <th>Stock</th>
         <th>Maintaining Level</th>
+        <th>Date Received</th>
+        <th>Product Age (Days)</th>
     </tr>
 
     <?php
-    $sql = "SELECT * FROM products";
+    $sql = "SELECT *, DATEDIFF(CURDATE(), date_received) AS product_age FROM products";
     $result = mysqli_query($conn, $sql);
+
     if (mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr>
@@ -178,10 +185,12 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
                 <td>" . htmlspecialchars($row["price"]) . "</td>
                 <td>" . htmlspecialchars($row["stock"]) . "</td>
                 <td>" . htmlspecialchars($row["maintaining_level"]) . "</td>
+                <td>" . htmlspecialchars($row["date_received"]) . "</td>
+                <td>" . htmlspecialchars($row["product_age"]) . " days</td>
             </tr>";
         }
     } else {
-        echo "<tr><td colspan='7'>No products found.</td></tr>";
+        echo "<tr><td colspan='9'>No products found.</td></tr>";
     }
     ?>
 </table>
@@ -204,3 +213,13 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
 
 
 <!-- nakalimutan mag pull woops new learnings -->
+
+
+<!-- hmmm new problem, pano kung nag order ng same product tapos iaadd sa inventory, hindi naman pwede pag samahin yung two products na mag ka iba na ng takbo yung age ng product -->
+<!-- Example: -->
+
+<!-- Existing: Black Paint = (serial_code) 1234567890, (lot_number) 1020304050, (age) 50 days ago, (remaining_stock) 100 -->
+<!-- New Arrival: Black Paint = (serial_code) 1234567890, (lot_number) 1020304050, (age) 0 days ago, (arrived) 500 -->
+
+<!-- both are the same, pero bawal pag samahin yung dalawa. Siguro dapat pwede sila mag merge dinamically yung existing quantity, and na sesegregate sila by age. -->
+<!-- Mag kakaroon ng revision sa Inventory -->
