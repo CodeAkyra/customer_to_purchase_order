@@ -197,6 +197,8 @@ while ($row = mysqli_fetch_assoc($resultMonthlySales)) {
                                                         <th>Customer</th>
                                                         <th>Date Created</th>
                                                         <th>Total Amount</th>
+                                                        <th>Total Amount</th>
+                                                        <th>Total Amount</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -206,6 +208,8 @@ while ($row = mysqli_fetch_assoc($resultMonthlySales)) {
                                                             <td><?= $po['customer_name'] ?></td>
                                                             <td><?= date('F d, Y', strtotime($po['date_created'])) ?></td>
                                                             <td>₱<?= number_format($po['total_price'], 2) ?></td>
+                                                            <td>NULL</td>
+                                                            <td>NULL</td>
 
                                                         </tr>
                                                     <?php endforeach; ?>

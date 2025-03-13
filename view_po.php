@@ -1,4 +1,7 @@
-<title>View Purchase Order</title>
+<!-- Previously Purchase Order -->
+<!-- File name is same parin muna, tsaka nalang palitan tinatamad pa q -->
+
+<title>View Customer Order Slip</title>
 
 <?php
 require "includes/conn.php";
@@ -13,10 +16,12 @@ $po_id = $_GET['id'];
 //                WHERE po.id = $po_id";
 
 $orderQuery = "SELECT po.id, po.customer_id, po.project_id, c.name, c.address, 
-                      po.order_date, po.status, p.project_name, p.date_started, p.date_ended
+                      po.order_date, po.status, p.project_name, p.date_started, p.date_ended,
+                      a.agent_code
                FROM purchase_orders po
                JOIN customers c ON po.customer_id = c.id 
-               JOIN project p ON po.project_id = p.project_id
+               LEFT JOIN project p ON po.project_id = p.project_id
+               LEFT JOIN agents a ON po.agent_id = a.id
                WHERE po.id = $po_id";
 // para bumalik sa project
 
@@ -63,13 +68,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <h2>Purchase Order Details</h2>
 <div id="printable_area">
-    <p><strong>Customer:</strong> <?= $order['name'] ?></p>
-    <p><strong>Address:</strong> <?= $order['address'] ?></p>
-    <p><strong>Project Name:</strong> <?= $order['project_name'] ?></p>
-    <p><strong>Project Date Started:</strong> <?= $order['date_started'] ?></p>
-    <p><strong>Project Date Ended:</strong> <?= $order['date_ended'] ?></p>
-    <p><strong>Purchase Order Date:</strong> <?= $order['order_date'] ?></p>
-    <p><strong>Purchase Order Status:</strong> <?= $order['status'] ?></p>
+
+    <p><strong>Agent:</strong> <?= $order['agent_code'] ?: 'No Agent Code' ?></p>
+    <p><strong>Customer:</strong> <?= $order['name'] ?: 'No Customer Name' ?></p>
+    <p><strong>Address:</strong> <?= $order['address'] ?: 'No Address' ?></p>
+    <p><strong>Project Name:</strong> <?= $order['project_name'] ?: 'No Project Name' ?></p>
+    <p><strong>Project Date Started:</strong> <?= $order['date_started'] ?: 'No Date Started' ?></p>
+    <p><strong>Project Date Ended:</strong> <?= $order['date_ended'] ?: 'No Date Ended' ?></p>
+    <p><strong>Purchase Order Date:</strong> <?= $order['order_date'] ?: 'No Order Date' ?></p>
+    <p><strong>Purchase Order Status:</strong> <?= $order['status'] ?: 'No Status' ?></p>
     <p><strong>Total Price:</strong> <?= number_format($total_price, 2) ?></p>
 
     <h3>Order List</h3>
@@ -130,6 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Customer & Order Details
         let y = 30;
         let details = [
+            "Agents: <?= $order['agent_code'] ?>",
             "Customer: <?= $order['name'] ?>",
             "Address: <?= $order['address'] ?>",
             "Project Name: <?= $order['project_name'] ?>",

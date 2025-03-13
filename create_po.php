@@ -1,4 +1,6 @@
-<title>Create Purchase Order</title>
+<!-- CHANGING TO COS (CUSTOMER ORDER SLIP) -->
+
+<title>Create Customer Order Slip</title>
 
 <?php
 require "includes/conn.php";
