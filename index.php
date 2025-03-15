@@ -167,6 +167,7 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
 
                     <!-- gets ko na paano yung magiging output neto, nag eexperiment pa muna ako sa ibang prototype -->
                     <!-- para yun lang yung focus niya and makuha ko agad yung gusto ko na output -->
+                    <!-- if trip niyo ma imagine, open niyo yung file STI-IPI(Sales Evaluation Template) then open niyo sa baba yung February 21 -->
                     <div class="modal fade" id="modalMonth<?= $monthNumber ?>" tabindex="-1"
                         aria-labelledby="modalLabel<?= $monthNumber ?>" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
@@ -184,6 +185,10 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                             <thead>
                                                 <tr>
                                                     <th>PO ID</th>
+                                                    <th>Agents</th>
+                                                    <th>Area</th>
+                                                    <th>Segment</th>
+                                                    <th>Subsegment</th>
                                                     <th>Customer</th>
                                                     <th>Date Created</th>
                                                     <th>Total Amount</th>
@@ -193,6 +198,10 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                                 <?php foreach ($purchaseOrders as $po): ?>
                                                     <tr>
                                                         <td><?= $po['id'] ?></td>
+                                                        <td>NULL</td>
+                                                        <td>NULL</td>
+                                                        <td>NULL</td>
+                                                        <td>NULL</td>
                                                         <td><?= $po['customer_name'] ?></td>
                                                         <td><?= date('F d, Y', strtotime($po['date_created'])) ?></td>
                                                         <td>₱<?= number_format($po['total_price'], 2) ?></td>
