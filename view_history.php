@@ -38,6 +38,13 @@ $fetch_name = mysqli_fetch_assoc($fetch_result);
         <th>Project Name</th>
         <th>Purchase Order Date</th>
         <th>Total Price</th>
+
+        <!-- TENTATIVE PA -->
+        <th>AGENT CODE</th>
+        <th>SEGMENT</th>
+        <th>SUBSEGMENT</th>
+
+
         <th>Status</th>
         <th>Action</th>
     </tr>
@@ -47,6 +54,10 @@ $fetch_name = mysqli_fetch_assoc($fetch_result);
             <td><?= $row["project_name"] ?></td>
             <td><?= $row["order_date"] ?></td>
             <td><?= $row["total_price"] ?></td>
+            <!-- TENTATIVE PA -->
+            <td> NULL </td>
+            <td> NULL </td>
+            <td> NULL </td>
             <td><?= $row["status"] ?></td>
             <td>
                 <a href="view_po.php?id=<?= $row["id"] ?>" class="btn btn-primary">View Details</a>

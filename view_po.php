@@ -79,7 +79,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <p><strong>Purchase Order Status:</strong> <?= $order['status'] ?: 'No Status' ?></p>
     <p><strong>Total Price:</strong> <?= number_format($total_price, 2) ?></p>
 
-    <h3>Order List</h3>
+
+    <!-- 
+MGA IDADAGDAG
+<p><strong>Deliver To:</strong>NULL</p>
+<p><strong>COS Number:</strong>NULL</p>
+<p><strong>Date:</strong>NULL</p>
+<p><strong>Terms:</strong>NULL</p>
+<p><strong>Credit Limit:</strong>NULL</p>
+<p><strong>Po No:</strong>NULL</p>
+<p><strong>Ordered By:</strong>NULL</p>
+<p><strong>TSR:</strong>NULL</p>
+<p><strong>Segment:</strong>NULL</p>
+<p><strong>Subsegment:</strong>NULL</p>
+<p><strong>VAT:</strong>NULL</p>
+-->
+
+    <h3>Product Order List</h3>
     <table border="1" cellspacing="0" cellpadding="5" width="100%">
         <tr>
             <th>Serial Code</th>

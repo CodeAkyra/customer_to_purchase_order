@@ -19,8 +19,10 @@ $queries = [
     "completedPOs" => "SELECT COUNT(*) AS count FROM purchase_orders WHERE status = 'Completed'",
     "totalRevenue" => "SELECT COALESCE(SUM(po_items.subtotal), 0) AS total FROM purchase_orders po 
                        LEFT JOIN purchase_order_items po_items ON po.id = po_items.po_id WHERE po.status = 'Completed'",
-    "pendingExpenses" => "SELECT COALESCE(SUM(po_items.subtotal), 0) AS total FROM purchase_orders po 
-                          LEFT JOIN purchase_order_items po_items ON po.id = po_items.po_id WHERE po.status != 'Completed'"
+    "pendingExpenses" => "SELECT COALESCE(SUM(po_items.subtotal), 0) AS total 
+                        FROM purchase_orders po 
+                        LEFT JOIN purchase_order_items po_items ON po.id = po_items.po_id 
+                        WHERE po.status != 'Completed'"
 ];
 
 // call the GOAT aka array
@@ -162,6 +164,9 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                     </div>
 
                     <!-- modal -->
+
+                    <!-- gets ko na paano yung magiging output neto, nag eexperiment pa muna ako sa ibang prototype -->
+                    <!-- para yun lang yung focus niya and makuha ko agad yung gusto ko na output -->
                     <div class="modal fade" id="modalMonth<?= $monthNumber ?>" tabindex="-1"
                         aria-labelledby="modalLabel<?= $monthNumber ?>" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
@@ -221,7 +226,7 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                         <th>PO ID</th>
                         <th>Customer</th>
                         <th>Status</th>
-                        <th>Date</th>
+                        <th>Date Created</th>
                         <th>Total Price</th>
                         <th>Action</th>
                     </tr>

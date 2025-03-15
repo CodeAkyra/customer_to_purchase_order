@@ -47,8 +47,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <p><strong>Customer:</strong> <?= $customer['name'] ?></p>
 <p><strong>Address:</strong> <?= $customer['address'] ?></p>
 
+<p><strong>Project:</strong>
 <form method="post">
-    <h3>Select Project</h3>
     <div style="display: flex; align-items: center; gap: 10px;">
         <select name="project_id" class="form-control" required>
             <option value="" disabled selected>Select a project</option>
@@ -58,6 +58,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </select>
         <a href="create_project.php?customer_id=<?= $customer_id ?>" class="btn btn-primary">Create New Project</a>
     </div>
+</form>
+</p>
+
+<!-- 
+MGA IDADAGDAG
+<p><strong>Deliver To:</strong>NULL</p>
+<p><strong>COS Number:</strong>NULL</p>
+<p><strong>Date:</strong>NULL</p>
+<p><strong>Terms:</strong>NULL</p>
+<p><strong>Credit Limit:</strong>NULL</p>
+<p><strong>Po No:</strong>NULL</p>
+<p><strong>Ordered By:</strong>NULL</p>
+<p><strong>TSR:</strong>NULL</p>
+<p><strong>Segment:</strong>NULL</p>
+<p><strong>Subsegment:</strong>NULL</p>
+<p><strong>VAT:</strong>NULL</p>
+-->
+
+
+
+
+
+<form method="post">
+
 
     <h3>Select Products</h3>
     <table class="table">
