@@ -66,10 +66,12 @@ while ($row = mysqli_fetch_assoc($resultMonthlySales)) {
 
 $monthlyPurchaseOrders = [];
 for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
-    $queryPOs = "SELECT po.id, c.name AS customer_name, po.date_created,
+    $queryPOs = "SELECT po.id, c.name AS customer_name, a.agent_code AS agent_code  po.date_created,
                  COALESCE((SELECT SUM(subtotal) FROM purchase_order_items WHERE po_id = po.id), 0) AS total_price
                  FROM purchase_orders po
                  JOIN customers c ON po.customer_id = c.id
+                 LEFT JOIN agents a ON po.id = a.id
+                --  sa bahay na toh
                  WHERE po.status = 'Completed' 
                  AND YEAR(po.date_created) = $selectedYear 
                  AND MONTH(po.date_created) = $monthNumber 
@@ -225,7 +227,7 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                                 <?php foreach ($purchaseOrders as $po): ?>
                                                     <tr>
                                                         <td><?= $po['id'] ?></td>
-                                                        <td>NULL</td>
+                                                        <td><?= $po['agent_code']?></td>
                                                         <td>NULL</td>
                                                         <td>NULL</td>
                                                         <td>NULL</td>
