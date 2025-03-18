@@ -51,7 +51,6 @@ $selectedYear = $_GET['year'] ?? date('Y');
 $resultYears = mysqli_query($conn, "SELECT DISTINCT YEAR(date_created) AS year FROM purchase_orders ORDER BY year DESC");
 
 
-
 $resultMonthlySales = mysqli_query(
     $conn,
     "SELECT MONTH(po.date_created) AS month, COALESCE(SUM(po_items.subtotal), 0) AS total_sales 
