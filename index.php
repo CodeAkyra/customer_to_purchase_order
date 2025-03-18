@@ -66,11 +66,11 @@ while ($row = mysqli_fetch_assoc($resultMonthlySales)) {
 
 $monthlyPurchaseOrders = [];
 for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
-    $queryPOs = "SELECT po.id, c.name AS customer_name, a.agent_code AS agent_code  po.date_created,
+    $queryPOs = "SELECT po.id, c.name AS customer_name, a.agent_code AS agent_code, a.area, po.segment, po.sub_segment, po.date_created,
                  COALESCE((SELECT SUM(subtotal) FROM purchase_order_items WHERE po_id = po.id), 0) AS total_price
                  FROM purchase_orders po
                  JOIN customers c ON po.customer_id = c.id
-                 LEFT JOIN agents a ON po.id = a.id
+                 JOIN agents a ON po.agent_id = a.id
                 --  sa bahay na toh
                  WHERE po.status = 'Completed' 
                  AND YEAR(po.date_created) = $selectedYear 
@@ -183,9 +183,16 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
+
+                                    <div>
+                                        <!-- dapat ma display dito kahit papaano yung parang katulad sa excel file nila sa Monthly Forecast -->
+                                    </div>
                                     <div style="display: flex;">
 
                                         <!-- kung ano yung naka select sa tatlo, yun yung mag didisplay -->
+                                        <select id="areaFilter" class="form-select w-auto">
+
+                                        </select>
                                         <select id="areaFilter" class="form-select w-auto">
                                             <option value="MANILA">MANILA</option>
                                             <option value="CEBU">CEBU</option>
@@ -228,9 +235,9 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                                     <tr>
                                                         <td><?= $po['id'] ?></td>
                                                         <td><?= $po['agent_code'] ?></td>
-                                                        <td>NULL</td>
-                                                        <td>NULL</td>
-                                                        <td>NULL</td>
+                                                        <td><?= $po['area'] ?></td>
+                                                        <td><?= $po['segment'] ?></td>
+                                                        <td><?= $po['sub_segment'] ?></td>
                                                         <td><?= $po['customer_name'] ?></td>
                                                         <td><?= date('F d, Y', strtotime($po['date_created'])) ?></td>
                                                         <td>₱<?= number_format($po['total_price'], 2) ?></td>
