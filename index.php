@@ -50,6 +50,8 @@ $selectedYear = $_GET['year'] ?? date('Y');
 
 $resultYears = mysqli_query($conn, "SELECT DISTINCT YEAR(date_created) AS year FROM purchase_orders ORDER BY year DESC");
 
+
+
 $resultMonthlySales = mysqli_query(
     $conn,
     "SELECT MONTH(po.date_created) AS month, COALESCE(SUM(po_items.subtotal), 0) AS total_sales 
@@ -180,6 +182,10 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
+                                    <select id="areaFilter" class="form-select w-auto">
+                                        <?php
+                                        ?>
+                                    </select>
                                     <?php if (!empty($purchaseOrders)): ?>
                                         <table class="table table-bordered">
                                             <thead>
