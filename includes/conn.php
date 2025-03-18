@@ -13,7 +13,8 @@
     $servername = "localhost";
     $localname = "root";
     $password = "";
-    $dbname = "customer_to_purchase_order";
+    // $dbname = "customer_to_purchase_order";
+    $dbname = "capsdb1";
 
     $conn = mysqli_connect($servername, $localname, $password, $dbname);
 

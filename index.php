@@ -22,7 +22,7 @@ $queries = [
     "pendingExpenses" => "SELECT COALESCE(SUM(po_items.subtotal), 0) AS total 
                         FROM purchase_orders po 
                         LEFT JOIN purchase_order_items po_items ON po.id = po_items.po_id 
-                        WHERE po.status != 'Completed'"
+                        WHERE po.status != 'Completed'",
 ];
 
 // call the GOAT aka array
@@ -50,6 +50,7 @@ $selectedYear = $_GET['year'] ?? date('Y');
 
 $resultYears = mysqli_query($conn, "SELECT DISTINCT YEAR(date_created) AS year FROM purchase_orders ORDER BY year DESC");
 
+
 $resultMonthlySales = mysqli_query(
     $conn,
     "SELECT MONTH(po.date_created) AS month, COALESCE(SUM(po_items.subtotal), 0) AS total_sales 
@@ -65,10 +66,12 @@ while ($row = mysqli_fetch_assoc($resultMonthlySales)) {
 
 $monthlyPurchaseOrders = [];
 for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
-    $queryPOs = "SELECT po.id, c.name AS customer_name, po.date_created,
+    $queryPOs = "SELECT po.id, c.name AS customer_name, a.agent_code AS agent_code  po.date_created,
                  COALESCE((SELECT SUM(subtotal) FROM purchase_order_items WHERE po_id = po.id), 0) AS total_price
                  FROM purchase_orders po
                  JOIN customers c ON po.customer_id = c.id
+                 LEFT JOIN agents a ON po.id = a.id
+                --  sa bahay na toh
                  WHERE po.status = 'Completed' 
                  AND YEAR(po.date_created) = $selectedYear 
                  AND MONTH(po.date_created) = $monthNumber 
@@ -180,6 +183,32 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
+                                    <div style="display: flex;">
+
+                                        <!-- kung ano yung naka select sa tatlo, yun yung mag didisplay -->
+                                        <select id="areaFilter" class="form-select w-auto">
+                                            <option value="MANILA">MANILA</option>
+                                            <option value="CEBU">CEBU</option>
+                                            <option value="GENSAN">GENSAN</option>
+                                            <option value="HOUSE">HOUSE</option>
+                                        </select>
+                                        <select id="segmentFilter" class="form-select w-auto">
+                                            <option value="PROTECTIVE">PROTECTIVE</option>
+                                            <option value="MARINE">MARINE</option>
+                                        </select>
+                                        <select id="sub-segmentFilter" class="form-select w-auto">
+                                            <option value="Floor Coating">FLOOR COATING</option>
+                                            <option value="Infrastructure">INFRASTRUCTURE</option>
+                                            <option value="Mining">MINING</option>
+                                            <option value="Oil & Gas">OIL & GAS</option>
+                                            <option value="Others">OTHERS</option>
+                                            <option value="Power Plant">POWER PLANT</option>
+                                            <option value="Labor">LABOR</option>
+                                            <option value="Credit Memo">CREDIT MEMO</option>
+                                            <option value="Delivery Charge">DELIVERY CHARGE</option>
+                                            <option value="Technical Charge">TECHNICAL CHARGE</option>
+                                        </select>
+                                    </div>
                                     <?php if (!empty($purchaseOrders)): ?>
                                         <table class="table table-bordered">
                                             <thead>
@@ -197,8 +226,8 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                             <tbody>
                                                 <?php foreach ($purchaseOrders as $po): ?>
                                                     <tr>
-                                                        <td><?= $po['id'] ?></td>https://github.com/jehanalexis/CAPSTONE-2.1.git
-                                                        <td>NULL</td>
+                                                        <td><?= $po['id'] ?></td>
+                                                        <td><?= $po['agent_code'] ?></td>
                                                         <td>NULL</td>
                                                         <td>NULL</td>
                                                         <td>NULL</td>
