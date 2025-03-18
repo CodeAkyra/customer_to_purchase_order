@@ -48,7 +48,9 @@ $resultTopProducts = mysqli_query(
 
 $selectedYear = $_GET['year'] ?? date('Y');
 
+
 $resultYears = mysqli_query($conn, "SELECT DISTINCT YEAR(date_created) AS year FROM purchase_orders ORDER BY year DESC");
+
 
 
 $resultMonthlySales = mysqli_query(
@@ -71,7 +73,6 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                  FROM purchase_orders po
                  JOIN customers c ON po.customer_id = c.id
                  JOIN agents a ON po.agent_id = a.id
-                --  sa bahay na toh
                  WHERE po.status = 'Completed' 
                  AND YEAR(po.date_created) = $selectedYear 
                  AND MONTH(po.date_created) = $monthNumber 
@@ -190,20 +191,38 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                     <div style="display: flex;">
 
                                         <!-- kung ano yung naka select sa tatlo, yun yung mag didisplay -->
-                                        <select id="areaFilter" class="form-select w-auto">
 
+                                        <select name="agent_code" class="form-select w-auto">
+                                            <?php
+                                            $query = "SELECT agent_code FROM agents";
+                                            $result = $conn->query($query);
+                                            ?>
+
+                                            <option value="">SELECT AGENT</option>
+                                            <?php
+                                            if ($result->num_rows > 0) {
+                                                while ($row = $result->fetch_assoc()) {
+                                                    echo "<option value='" . htmlspecialchars($row['agent_code']) . "'>" . htmlspecialchars($row['agent_code']) . "</option>";
+                                                }
+                                            }
+                                            ?>
                                         </select>
+
+
                                         <select id="areaFilter" class="form-select w-auto">
+                                            <option value="">SELECT AREA</option>
                                             <option value="MANILA">MANILA</option>
                                             <option value="CEBU">CEBU</option>
                                             <option value="GENSAN">GENSAN</option>
                                             <option value="HOUSE">HOUSE</option>
                                         </select>
                                         <select id="segmentFilter" class="form-select w-auto">
+                                            <option value="">SELECT SEGMENT</option>
                                             <option value="PROTECTIVE">PROTECTIVE</option>
                                             <option value="MARINE">MARINE</option>
                                         </select>
                                         <select id="sub-segmentFilter" class="form-select w-auto">
+                                            <option value="">SELECT AGENT</option>
                                             <option value="Floor Coating">FLOOR COATING</option>
                                             <option value="Infrastructure">INFRASTRUCTURE</option>
                                             <option value="Mining">MINING</option>
