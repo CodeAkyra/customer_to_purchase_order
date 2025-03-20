@@ -18,13 +18,20 @@ $productResult = mysqli_query($conn, $productQuery);
 $projectQuery = "SELECT * FROM project WHERE customer_id = $customer_id AND date_ended IS NULL";
 $projectResult = mysqli_query($conn, $projectQuery);
 
+// Fetch agents
+$agentQuery = "SELECT * FROM agents";
+$agentResult = mysqli_query($conn, $agentQuery);
+
 // Handle PO Submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date = date("Y-m-d H:i:s");
     $project_id = $_POST['project_id'];
+    $agent_id = $_POST['agent_id'];
+    $segment = $_POST['segment'];
+    $sub_segment = $_POST['sub_segment'];
 
-    mysqli_query($conn, "INSERT INTO purchase_orders (customer_id, project_id, order_date, status) 
-                         VALUES ($customer_id, $project_id, '$date', 'Pending')");
+    mysqli_query($conn, "INSERT INTO purchase_orders (customer_id, project_id, agent_id, segment, sub_segment, order_date, status) 
+                         VALUES ($customer_id, $project_id, $agent_id, '$segment', '$sub_segment', '$date', 'Pending')");
     $po_id = mysqli_insert_id($conn);
 
     foreach ($_POST['products'] as $product_id => $quantity) {
@@ -60,6 +67,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!-- Start Form -->
 <form method="post" id="orderForm">
+
+    <h3>Select Agent</h3>
+    <select name="agent_id" class="form-control" required>
+        <option value="" disabled selected>Select an Agent</option>
+        <?php while ($agent = mysqli_fetch_assoc($agentResult)): ?>
+            <option value="<?= $agent['id'] ?>"><?= $agent['agent_name'] ?> - <?= $agent['agent_code'] ?> (<?= $agent['area'] ?>)</option>
+        <?php endwhile; ?>
+    </select>
+
+    <h3>Select Segment</h3>
+    <select name="segment" class="form-control" required>
+        <option value="" disabled selected>Select Segment</option>
+        <option value="PROTECTIVE">PROTECTIVE</option>
+        <option value="MARINE">MARINE</option>
+    </select>
+
+    <h3>Select Sub-Segment</h3>
+    <select name="sub_segment" class="form-control" required>
+        <option value="" disabled selected>Select Sub-Segment</option>
+        <option value="FLOOR COATING">Floor Coating</option>
+        <option value="INFRASTRUCTURE">Infrastructure</option>
+        <option value="MINING">Mining</option>
+        <option value="OIL & GAS">Oil & Gas</option>
+        <option value="OTHERS">Others</option>
+        <option value="POWER PLANT">Power Plant</option>
+        <option value="LABOR">Labor</option>
+        <option value="CREDIT MEMO">Credit Memo</option>
+        <option value="DELIVERY CHARGE">Delivery Charge</option>
+        <option value="TECHNICAL CHARGE">Technical Charge</option>
+    </select>
 
     <h3>Select Project</h3>
     <div style="display: flex; align-items: center; gap: 10px;">
@@ -149,50 +186,60 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <a href="customer_information.php" class="btn btn-secondary">Back</a>
 </form>
 
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const selectedProductsTable = document.querySelector("#selectedProductsTable tbody");
         const projectSelect = document.querySelector("#projectSelect");
 
         document.querySelectorAll(".add-to-table").forEach(button => {
-            button.addEventListener("click", function() {
-                let product = {
-                    id: this.dataset.id,
-                    name: this.dataset.name,
-                    serial: this.dataset.serial,
-                    lot: this.dataset.lot,
-                    stock: this.dataset.stock
-                };
+            button.addEventListener("click", function(event) {
+                event.preventDefault(); // Prevents form submission
 
-                if (document.getElementById(`product-${product.id}`)) {
-                    alert("Product already added!");
+                let productId = this.dataset.id;
+                let productName = this.dataset.name;
+                let serialCode = this.dataset.serial;
+                let lotNumber = this.dataset.lot;
+                let stock = this.dataset.stock;
+
+                let tableBody = document.querySelector("#selectedProductsTable tbody");
+
+                // Check if the product is already added
+                if (document.querySelector(`#row-${productId}`)) {
+                    alert("Product is already added!");
                     return;
                 }
 
-                // Auto-select project to prevent "Required" message
-                if (!projectSelect.value) {
-                    projectSelect.value = projectSelect.options[1].value;
-                }
+                // Create table row
+                let newRow = document.createElement("tr");
+                newRow.id = `row-${productId}`;
+                newRow.innerHTML = `
+            <td>${productId}</td>
+            <td>${serialCode}</td>
+            <td>${lotNumber}</td>
+            <td>${productName}</td>
+            <td>${stock}</td>
+            <td>
+                <input type="number" name="products[${productId}]" min="1" max="${stock}" class="form-control" required>
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger remove-product" data-id="${productId}">Remove</button>
+            </td>
+        `;
 
-                let row = document.createElement("tr");
-                row.id = `product-${product.id}`;
-                row.innerHTML = `
-                <td>${product.id} <input type="hidden" name="products[${product.id}]" value="${product.id}"></td>
-                <td>${product.serial}</td>
-                <td>${product.lot}</td>
-                <td>${product.name}</td>
-                <td>${product.stock}</td>
-                <td><input type="number" class="quantity-input form-control" name="products[${product.id}]" min="1" max="${product.stock}" value="1"></td>
-                <td><button type="button" class="btn btn-danger remove-product">Remove</button></td>
-            `;
-
-                row.querySelector(".remove-product").addEventListener("click", function() {
-                    row.remove();
-                });
-
-                selectedProductsTable.appendChild(row);
+                // Append to table
+                tableBody.appendChild(newRow);
             });
         });
+
+        // Remove Product
+        document.addEventListener("click", function(event) {
+            if (event.target.classList.contains("remove-product")) {
+                let productId = event.target.dataset.id;
+                document.querySelector(`#row-${productId}`).remove();
+            }
+        });
+
 
         // Search Function
         document.getElementById("searchBar").addEventListener("input", function() {

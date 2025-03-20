@@ -14,10 +14,11 @@ $id = $_GET["id"];
 //         (SELECT SUM(subtotal) FROM purchase_order_items WHERE po_id = po.id) AS total_price
 //         FROM purchase_orders po WHERE customer_id = $id";
 
-$sql = "SELECT po.id, po.order_date, po.status, p.project_name,
+$sql = "SELECT po.id, po.order_date, po.status, po.segment, po.sub_segment, p.project_name, a.agent_code,
         (SELECT SUM(subtotal) FROM purchase_order_items WHERE po_id = po.id) AS total_price
         FROM purchase_orders po
         LEFT JOIN project p ON po.project_id = p.project_id
+        JOIN agents a ON po.agent_id = a.id
         WHERE po.customer_id = $id";
 
 $result = mysqli_query($conn, $sql);
@@ -55,9 +56,9 @@ $fetch_name = mysqli_fetch_assoc($fetch_result);
             <td><?= $row["order_date"] ?></td>
             <td><?= $row["total_price"] ?></td>
             <!-- TENTATIVE PA -->
-            <td> NULL </td>
-            <td> NULL </td>
-            <td> NULL </td>
+            <td><?= $row['agent_code'] ?></td>
+            <td><?= $row['segment'] ?></td>
+            <td><?= $row['sub_segment'] ?></td>
             <td><?= $row["status"] ?></td>
             <td>
                 <a href="view_po.php?id=<?= $row["id"] ?>" class="btn btn-primary">View Details</a>
