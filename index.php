@@ -184,13 +184,25 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                             <tbody>
                                                 <?php
                                                 $agentTotals = [];
+                                                $allAgents = [];
+
+                                                // Collect all unique agents
+                                                foreach ($purchaseOrders as $po) {
+                                                    $allAgents[$po['agent_code']] = true;
+                                                }
 
                                                 // Group revenues by area, segment, and agent
                                                 foreach ($purchaseOrders as $po) {
-                                                    $area = $po['area'];
-                                                    $segment = $po['segment'];
-                                                    $agent = $po['agent_code'];
-                                                    $amount = $po['total_price'];
+                                                    $area = trim($po['area']);
+                                                    $segment = trim($po['segment']);
+                                                    $agent = trim($po['agent_code']);
+                                                    $amount = floatval($po['total_price']);
+
+                                                    // Determine agent suffix based on segment
+                                                    $suffix = ($segment === 'PROTECTIVE') ? 'P' : (($segment === 'MARINE') ? 'M' : '');
+
+                                                    // Append the correct suffix
+                                                    $agentWithSuffix = $agent . $suffix;
 
                                                     if (!isset($agentTotals[$area])) {
                                                         $agentTotals[$area] = [];
@@ -198,21 +210,67 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                                     if (!isset($agentTotals[$area][$segment])) {
                                                         $agentTotals[$area][$segment] = [];
                                                     }
-                                                    if (!isset($agentTotals[$area][$segment][$agent])) {
-                                                        $agentTotals[$area][$segment][$agent] = 0;
+                                                    if (!isset($agentTotals[$area][$segment][$agentWithSuffix])) {
+                                                        $agentTotals[$area][$segment][$agentWithSuffix] = 0;
                                                     }
-                                                    $agentTotals[$area][$segment][$agent] += $amount;
+                                                    $agentTotals[$area][$segment][$agentWithSuffix] += $amount;
                                                 }
 
-                                                // Display grouped data
-                                                foreach ($agentTotals as $area => $segments): ?>
+                                                // Ensure all agents appear in every area & segment
+                                                foreach ($agentTotals as $area => &$segments) {
+                                                    foreach ($segments as $segment => &$agents) {
+                                                        foreach ($allAgents as $agent => $value) {
+                                                            $suffix = ($segment === 'PROTECTIVE') ? 'P' : (($segment === 'MARINE') ? 'M' : '');
+                                                            $agentWithSuffix = $agent . $suffix;
+
+                                                            if (!isset($agents[$agentWithSuffix])) {
+                                                                $agents[$agentWithSuffix] = 0;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                unset($segments, $agents); // Prevent accidental reference modification
+
+                                                // Sort agent codes alphabetically before displaying
+                                                foreach ($agentTotals as $area => &$segments) {
+                                                    foreach ($segments as &$agents) {
+                                                        ksort($agents);
+                                                    }
+                                                }
+                                                unset($segments, $agents);
+
+
+                                                foreach ($agentTotals as $area => $segments):
+                                                    $areaTotal = 0; // Initialize total for the area
+                                                    foreach ($segments as $segment => $agents) {
+                                                        $areaTotal += array_sum($agents); // Add segment totals to area total
+                                                    }
+                                                ?>
                                                     <tr class="table-primary">
-                                                        <td colspan="2"><strong><?= htmlspecialchars($area) ?></strong></td>
+                                                        <td colspan="2">
+                                                            <div class="d-flex justify-content-between">
+                                                                <strong><?= strtoupper(htmlspecialchars($area)) ?></strong>
+                                                                <strong>₱<?= number_format($areaTotal, 2) ?></strong>
+                                                            </div>
+                                                        </td>
                                                     </tr>
-                                                    <?php foreach ($segments as $segment => $agents): ?>
+                                                    <?php foreach ($segments as $segment => $agents):
+                                                        $segmentTotal = array_sum($agents); // Calculate segment total
+                                                    ?>
                                                         <tr class="table-secondary">
-                                                            <td colspan="2" style="padding-left: 20px;"><strong>— <?= htmlspecialchars($segment) ?></strong></td>
+                                                            <td colspan="2" style="padding-left: 20px;">
+                                                                <div class="d-flex justify-content-between">
+                                                                    <strong>— <?= strtoupper(htmlspecialchars($segment)) ?></strong>
+                                                                    <strong>₱<?= number_format($segmentTotal, 2) ?></strong>
+                                                                </div>
+                                                            </td>
                                                         </tr>
+                                                        <th>Agent Code</th>
+                                                        <th>Quota</th>
+                                                        <!-- <th>
+                                                            <center>Quota / Volume(Liters)</center>
+                                                        </th> -->
+                                                        <!-- sunod na toh, may madadagdag din kasi sa column sa product -->
                                                         <?php foreach ($agents as $agent => $total): ?>
                                                             <tr>
                                                                 <td style="padding-left: 40px;"><?= htmlspecialchars($agent) ?></td>
@@ -221,10 +279,10 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                                         <?php endforeach; ?>
                                                     <?php endforeach; ?>
                                                 <?php endforeach; ?>
+
+
                                             </tbody>
                                         </table>
-
-
                                         <!-- Detailed Customer Order Slip Table -->
                                         <h5 class="mt-4"><strong>DETAILED CUSTOMER ORDER SLIP</strong></h5>
                                         <table class="table table-bordered">
