@@ -299,11 +299,11 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                                         <tr class="table-secondary">
                                                             <td colspan="8" style="padding-left: 20px;"><strong>— <?= $segment ?></strong></td>
                                                         </tr>
+                                                        <th>Customer Name</th>
                                                         <th>Agent Code</th>
                                                         <th>Area</th>
                                                         <th>Segment</th>
                                                         <th>Subsegment</th>
-                                                        <th>Customer Name</th>
                                                         <th>Date Created</th>
                                                         <th>Total Price</th>
                                                         <?php
@@ -313,11 +313,11 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                                             if (strcasecmp(trim($po['area']), trim($area)) === 0 && strcasecmp(trim($po['segment']), trim($segment)) === 0):
                                                                 $hasData = true; ?>
                                                                 <tr>
+                                                                    <td><?= htmlspecialchars($po['customer_name']) ?></td>
                                                                     <td><?= htmlspecialchars($po['agent_code']) ?></td>
                                                                     <td><?= htmlspecialchars($po['area']) ?></td>
                                                                     <td><?= htmlspecialchars($po['segment']) ?></td>
                                                                     <td><?= htmlspecialchars($po['sub_segment']) ?></td>
-                                                                    <td><?= htmlspecialchars($po['customer_name']) ?></td>
                                                                     <td><?= date('F d, Y', strtotime($po['date_created'])) ?></td>
                                                                     <td>₱<?= number_format($po['total_price'], 2) ?></td>
                                                                 </tr>
