@@ -166,7 +166,7 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
 
                     <div class="modal fade" id="modalMonth<?= $monthNumber ?>" tabindex="-1"
                         aria-labelledby="modalLabel<?= $monthNumber ?>" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
+                        <div class="modal-dialog modal-xl">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="modalLabel<?= $monthNumber ?>">
@@ -299,6 +299,13 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                                         <tr class="table-secondary">
                                                             <td colspan="8" style="padding-left: 20px;"><strong>— <?= $segment ?></strong></td>
                                                         </tr>
+                                                        <th>Agent Code</th>
+                                                        <th>Area</th>
+                                                        <th>Segment</th>
+                                                        <th>Subsegment</th>
+                                                        <th>Customer Name</th>
+                                                        <th>Date Created</th>
+                                                        <th>Total Price</th>
                                                         <?php
                                                         $hasData = false;
 
@@ -306,7 +313,6 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                                             if (strcasecmp(trim($po['area']), trim($area)) === 0 && strcasecmp(trim($po['segment']), trim($segment)) === 0):
                                                                 $hasData = true; ?>
                                                                 <tr>
-                                                                    <td><?= htmlspecialchars($po['id']) ?></td>
                                                                     <td><?= htmlspecialchars($po['agent_code']) ?></td>
                                                                     <td><?= htmlspecialchars($po['area']) ?></td>
                                                                     <td><?= htmlspecialchars($po['segment']) ?></td>
