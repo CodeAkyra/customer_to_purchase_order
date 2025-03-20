@@ -8,6 +8,8 @@ function fetchSingleValue($conn, $query, $column)
     return mysqli_fetch_assoc(mysqli_query($conn, $query))[$column] ?? 0;
 }
 
+// mark eto suggested ko na code. mas efficient siya. try mo din na eto iimplement. ganto ginawa ko sa main repo
+// array is da key, array is the GOAT
 $queries = [
     "lowStockCount" => "SELECT COUNT(*) AS count FROM products WHERE stock < maintaining_level",
     "totalCustomers" => "SELECT COUNT(*) AS count FROM customers",
@@ -23,6 +25,7 @@ $queries = [
                         WHERE po.status != 'Completed'",
 ];
 
+// call the GOAT aka array
 $data = [];
 foreach ($queries as $key => $query) {
     $data[$key] = fetchSingleValue($conn, $query, strpos($query, "SUM") !== false ? "total" : "count");
@@ -164,6 +167,11 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                         </a>
                     </div>
 
+                    <!-- modal -->
+
+                    <!-- gets ko na paano yung magiging output neto, nag eexperiment pa muna ako sa ibang prototype -->
+                    <!-- para yun lang yung focus niya and makuha ko agad yung gusto ko na output -->
+                    <!-- if trip niyo ma imagine, open niyo yung file STI-IPI(Sales Evaluation Template) then open niyo sa baba yung February 21 -->
                     <div class="modal fade" id="modalMonth<?= $monthNumber ?>" tabindex="-1"
                         aria-labelledby="modalLabel<?= $monthNumber ?>" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
@@ -172,109 +180,93 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                     <h5 class="modal-title" id="modalLabel<?= $monthNumber ?>">
                                         Purchase Orders - <?= $months[$monthNumber - 1] ?> <?= $selectedYear ?>
                                     </h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
 
-                                    <?php if (!empty($purchaseOrders)): ?>
+                                    <div>
+                                        <!-- dapat ma display dito kahit papaano yung parang katulad sa excel file nila sa Monthly Forecast -->
+                                    </div>
+                                    <div style="display: flex;">
 
-                                        <!-- Agent Revenue Summary (Grouped by Area & Segment) -->
-                                        <h5 class="mb-3"><strong>AGENT REVENUE SUMMARY</strong></h5>
-                                        <table class="table table-bordered">
-                                            <tbody>
-                                                <?php
-                                                $agentTotals = [];
+                                        <!-- kung ano yung naka select sa tatlo, yun yung mag didisplay -->
 
-                                                // Group revenues by area, segment, and agent
-                                                foreach ($purchaseOrders as $po) {
-                                                    $area = $po['area'];
-                                                    $segment = $po['segment'];
-                                                    $agent = $po['agent_code'];
-                                                    $amount = $po['total_price'];
+                                        <select name="agent_code" class="form-select w-auto">
+                                            <?php
+                                            $query = "SELECT agent_code FROM agents";
+                                            $result = $conn->query($query);
+                                            ?>
 
-                                                    if (!isset($agentTotals[$area])) {
-                                                        $agentTotals[$area] = [];
-                                                    }
-                                                    if (!isset($agentTotals[$area][$segment])) {
-                                                        $agentTotals[$area][$segment] = [];
-                                                    }
-                                                    if (!isset($agentTotals[$area][$segment][$agent])) {
-                                                        $agentTotals[$area][$segment][$agent] = 0;
-                                                    }
-                                                    $agentTotals[$area][$segment][$agent] += $amount;
+                                            <option value="">SELECT AGENT</option>
+                                            <?php
+                                            if ($result->num_rows > 0) {
+                                                while ($row = $result->fetch_assoc()) {
+                                                    echo "<option value='" . htmlspecialchars($row['agent_code']) . "'>" . htmlspecialchars($row['agent_code']) . "</option>";
                                                 }
-
-                                                // Display grouped data
-                                                foreach ($agentTotals as $area => $segments): ?>
-                                                    <tr class="table-primary">
-                                                        <td colspan="2"><strong><?= htmlspecialchars($area) ?></strong></td>
-                                                    </tr>
-                                                    <?php foreach ($segments as $segment => $agents): ?>
-                                                        <tr class="table-secondary">
-                                                            <td colspan="2" style="padding-left: 20px;"><strong>— <?= htmlspecialchars($segment) ?></strong></td>
-                                                        </tr>
-                                                        <?php foreach ($agents as $agent => $total): ?>
-                                                            <tr>
-                                                                <td style="padding-left: 40px;"><?= htmlspecialchars($agent) ?></td>
-                                                                <td>₱<?= number_format($total, 2) ?></td>
-                                                            </tr>
-                                                        <?php endforeach; ?>
-                                                    <?php endforeach; ?>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
+                                            }
+                                            ?>
+                                        </select>
 
 
-                                        <!-- Detailed Customer Order Slip Table -->
-                                        <h5 class="mt-4"><strong>DETAILED CUSTOMER ORDER SLIP</strong></h5>
+                                        <select id="areaFilter" class="form-select w-auto">
+                                            <option value="">SELECT AREA</option>
+                                            <option value="MANILA">MANILA</option>
+                                            <option value="CEBU">CEBU</option>
+                                            <option value="GENSAN">GENSAN</option>
+                                            <option value="HOUSE">HOUSE</option>
+                                        </select>
+                                        <select id="segmentFilter" class="form-select w-auto">
+                                            <option value="">SELECT SEGMENT</option>
+                                            <option value="PROTECTIVE">PROTECTIVE</option>
+                                            <option value="MARINE">MARINE</option>
+                                        </select>
+                                        <select id="sub-segmentFilter" class="form-select w-auto">
+                                            <option value="">SELECT AGENT</option>
+                                            <option value="Floor Coating">FLOOR COATING</option>
+                                            <option value="Infrastructure">INFRASTRUCTURE</option>
+                                            <option value="Mining">MINING</option>
+                                            <option value="Oil & Gas">OIL & GAS</option>
+                                            <option value="Others">OTHERS</option>
+                                            <option value="Power Plant">POWER PLANT</option>
+                                            <option value="Labor">LABOR</option>
+                                            <option value="Credit Memo">CREDIT MEMO</option>
+                                            <option value="Delivery Charge">DELIVERY CHARGE</option>
+                                            <option value="Technical Charge">TECHNICAL CHARGE</option>
+                                        </select>
+                                    </div>
+                                    <?php if (!empty($purchaseOrders)): ?>
                                         <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>PO ID</th>
+                                                    <th>Agents</th>
+                                                    <th>Area</th>
+                                                    <th>Segment</th>
+                                                    <th>Subsegment</th>
+                                                    <th>Customer</th>
+                                                    <th>Date Created</th>
+                                                    <th>Total Amount</th>
+                                                </tr>
+                                            </thead>
                                             <tbody>
-                                                <?php
-                                                $areas = ["Manila", "Cebu", "Gensan", "House"];
-                                                $segments = ["Protective", "Marine"];
-
-                                                foreach ($areas as $area): ?>
-                                                    <tr class="table-primary">
-                                                        <td colspan="8"><strong><?= $area ?></strong></td>
+                                                <?php foreach ($purchaseOrders as $po): ?>
+                                                    <tr>
+                                                        <td><?= $po['id'] ?></td>
+                                                        <td><?= $po['agent_code'] ?></td>
+                                                        <td><?= $po['area'] ?></td>
+                                                        <td><?= $po['segment'] ?></td>
+                                                        <td><?= $po['sub_segment'] ?></td>
+                                                        <td><?= $po['customer_name'] ?></td>
+                                                        <td><?= date('F d, Y', strtotime($po['date_created'])) ?></td>
+                                                        <td>₱<?= number_format($po['total_price'], 2) ?></td>
                                                     </tr>
-                                                    <?php foreach ($segments as $segment): ?>
-                                                        <tr class="table-secondary">
-                                                            <td colspan="8" style="padding-left: 20px;"><strong>— <?= $segment ?></strong></td>
-                                                        </tr>
-                                                        <?php
-                                                        $hasData = false;
-
-                                                        foreach ($purchaseOrders as $po):
-                                                            if (strcasecmp(trim($po['area']), trim($area)) === 0 && strcasecmp(trim($po['segment']), trim($segment)) === 0):
-                                                                $hasData = true; ?>
-                                                                <tr>
-                                                                    <td><?= htmlspecialchars($po['id']) ?></td>
-                                                                    <td><?= htmlspecialchars($po['agent_code']) ?></td>
-                                                                    <td><?= htmlspecialchars($po['area']) ?></td>
-                                                                    <td><?= htmlspecialchars($po['segment']) ?></td>
-                                                                    <td><?= htmlspecialchars($po['sub_segment']) ?></td>
-                                                                    <td><?= htmlspecialchars($po['customer_name']) ?></td>
-                                                                    <td><?= date('F d, Y', strtotime($po['date_created'])) ?></td>
-                                                                    <td>₱<?= number_format($po['total_price'], 2) ?></td>
-                                                                </tr>
-                                                            <?php endif;
-                                                        endforeach;
-
-                                                        if (!$hasData): ?>
-                                                            <tr>
-                                                                <td colspan="8" class="text-muted text-center">No data available</td>
-                                                            </tr>
-                                                        <?php endif; ?>
-
-                                                    <?php endforeach; ?>
                                                 <?php endforeach; ?>
                                             </tbody>
                                         </table>
-
                                     <?php else: ?>
                                         <p class="text-center text-muted">No Purchase Orders found for this month.</p>
                                     <?php endif; ?>
-
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -282,8 +274,6 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                             </div>
                         </div>
                     </div>
-
-
                 <?php endfor; ?>
             </div>
 
@@ -359,3 +349,69 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
 </body>
 
 </html>
+
+
+
+
+
+
+
+<!-- ______________________________________________________________________________________________________________ -->
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>PO ID</th>
+            <th>Agents</th>
+            <th>Area</th>
+            <th>Segment</th>
+            <th>Subsegment</th>
+            <th>Customer</th>
+            <th>Date Created</th>
+            <th>Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $areas = ["Manila", "Cebu", "Gensan", "House"];
+        $segments = ["Protective", "Marine"];
+
+        foreach ($areas as $area): ?>
+            <tr class="table-primary">
+                <td colspan="8"><strong><?= $area ?></strong></td>
+            </tr>
+            <?php foreach ($segments as $segment): ?>
+                <tr class="table-secondary">
+                    <td colspan="8" style="padding-left: 20px;"><strong>— <?= $segment ?></strong></td>
+                </tr>
+                <?php
+                $hasData = false; // Flag to check if there's data under this segment
+
+                foreach ($purchaseOrders as $po):
+                    if (strcasecmp(trim($po['area']), trim($area)) === 0 && strcasecmp(trim($po['segment']), trim($segment)) === 0):
+                        $hasData = true; ?>
+                        <tr>
+                            <td><?= htmlspecialchars($po['id']) ?></td>
+                            <td><?= htmlspecialchars($po['agent_code']) ?></td>
+                            <td><?= htmlspecialchars($po['area']) ?></td>
+                            <td><?= htmlspecialchars($po['segment']) ?></td>
+                            <td><?= htmlspecialchars($po['sub_segment']) ?></td>
+                            <td><?= htmlspecialchars($po['customer_name']) ?></td>
+                            <td><?= date('F d, Y', strtotime($po['date_created'])) ?></td>
+                            <td>₱<?= number_format($po['total_price'], 2) ?></td>
+                        </tr>
+                    <?php endif;
+                endforeach;
+
+                // If no data was found for this area-segment, show a placeholder row
+                if (!$hasData): ?>
+                    <tr>
+                        <td colspan="8" class="text-muted text-center">No data available</td>
+                    </tr>
+                <?php endif; ?>
+
+            <?php endforeach; ?>
+        <?php endforeach; ?>
+    </tbody>
+</table>
