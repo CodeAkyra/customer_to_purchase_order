@@ -223,3 +223,10 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
 
 <!-- both are the same, pero bawal pag samahin yung dalawa. Siguro dapat pwede sila mag merge dinamically yung existing quantity, and na sesegregate sila by age. -->
 <!-- Mag kakaroon ng revision sa Inventory -->
+
+
+
+
+
+<!-- MARCH 21, 2025 -->
+ <!-- dapat kada product meron view all transaction tapos na didisplay lahat ng COS na nacreate na kasama dun yung product na inorder -->

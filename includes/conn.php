@@ -14,7 +14,7 @@
     $localname = "root";
     $password = "";
     // $dbname = "customer_to_purchase_order";
-    $dbname = "capsdb1";
+    $dbname = "presentation_db";
 
     $conn = mysqli_connect($servername, $localname, $password, $dbname);
 
