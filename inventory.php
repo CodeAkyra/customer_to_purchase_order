@@ -2,74 +2,7 @@
 <?php require "includes/conn.php"; ?>
 
 <h2>Inventory</h2>
-
-<!-- Add Product Button (Opens Modal) -->
-<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">
-    + Add Product
-</button>
-
-<!-- Add Product Modal -->
-
-<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
-
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addProductModalLabel">Add New Product | Date received <?php echo date('Y-m-d') ?></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="" method="post">
-                    <label>Serial Code</label> <span style="color: #ADADAD;">*Connect a barcode scanner for quicker input*</span>
-                    <input type="text" name="serial_code" class="form-control" required placeholder="Enter Serial Code">
-
-                    <label>Lot Number</label> <span style="color: #ADADAD;">*Connect a barcode scanner for quicker input*</span>
-                    <input type="text" name="lot_no" class="form-control" required placeholder="Enter Lot Number">
-
-                    <label>Name</label>
-                    <input type="text" name="name" class="form-control" required placeholder="Enter Product Name">
-
-                    <label>Price</label>
-                    <input type="number" step="0.01" name="price" class="form-control" required placeholder="Enter Price">
-
-                    <label>Stock</label>
-                    <input type="number" name="stock" class="form-control" required placeholder="Enter Stock Quantity">
-
-                    <label>Maintaining Level</label>
-                    <input type="number" name="maintaining_level" class="form-control" required placeholder="Enter Maintaining Level">
-
-
-                    <input type="hidden" name="date_received" value="<?php echo date('Y-m-d'); ?>">
-
-                    <button type="submit" name="add_product" class="btn btn-success mt-3">Add Product</button>
-                </form>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<?php
-// Handle product addition
-if (isset($_POST['add_product'])) {
-    $serial_code = mysqli_real_escape_string($conn, $_POST['serial_code']);
-    $lot_no = mysqli_real_escape_string($conn, $_POST['lot_no']);
-    $name = mysqli_real_escape_string($conn, $_POST['name']);
-    $price = mysqli_real_escape_string($conn, $_POST['price']);
-    $stock = mysqli_real_escape_string($conn, $_POST['stock']);
-    $maintaining_level = mysqli_real_escape_string($conn, $_POST['maintaining_level']);
-
-    // Insert into database
-    $sql = "INSERT INTO products (serial_code, lot_no, name, price, stock, maintaining_level) 
-            VALUES ('$serial_code', '$lot_no', '$name', '$price', '$stock', '$maintaining_level')";
-
-    if (mysqli_query($conn, $sql)) {
-        echo "<p class='text-success'>Product added successfully!</p>";
-    } else {
-        echo "<p class='text-danger'>Error adding product: " . mysqli_error($conn) . "</p>";
-    }
-}
-?>
+<a href="pre_inventory.php" class="btn btn-primary">Pre-Inventory</a> <!-- Tentative pa yung name, naisip ko dito narin yung pag add ng products -->
 
 <!-- Search Product -->
 <form action="" method="get">
@@ -246,4 +179,4 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
 
 
 <!-- MARCH 21, 2025 -->
- <!-- dapat kada product meron view all transaction tapos na didisplay lahat ng COS na nacreate na kasama dun yung product na inorder -->
+<!-- dapat kada product meron view all transaction tapos na didisplay lahat ng COS na nacreate na kasama dun yung product na inorder -->
