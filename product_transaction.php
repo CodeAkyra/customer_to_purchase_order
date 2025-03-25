@@ -7,9 +7,10 @@ require "includes/conn.php";
 
 $product_id = $_GET['id'];
 
-$poIQuery = "SELECT po_i.product_id, po_i.id, po_i.po_id, po_i.quantity, po_i.price, po_i.subtotal, p.name, po.customer_id as customer_name
+$poIQuery = "SELECT po_i.product_id, po_i.id, po_i.po_id, po_i.quantity, po_i.price, po_i.subtotal, p.name, c.name as customer_name
                 FROM purchase_order_items po_i
                 LEFT JOIN purchase_orders po ON po_i.po_id = po.id
+                LEFT JOIN customers c ON po.customer_id = c.id
                 LEFT JOIN products p ON po_i.product_id = p.id
                 WHERE po_i.product_id = $product_id";
 
