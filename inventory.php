@@ -108,7 +108,8 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
     <?php
     $sql = "SELECT p.*, DATEDIFF(CURDATE(), p.date_received) AS product_age, po_i.product_id
     FROM products p
-    JOIN purchase_order_items po_i ON p.id = po_i.product_id
+    LEFT JOIN purchase_order_items po_i ON p.id = po_i.product_id
+    WHERE p.product_status = 'Verified'
     GROUP BY p.id;
     ";
     $result = mysqli_query($conn, $sql);

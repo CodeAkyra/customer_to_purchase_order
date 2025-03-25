@@ -1,9 +1,23 @@
 <title>Pre-Inventory</title>
 
 <?php
-
 require "includes/conn.php";
 
+$productQuery = "SELECT product_status FROM products WHERE product_status = 'draft' LIMIT 1";
+$productResult = mysqli_query($conn, $productQuery);
+$verify = mysqli_fetch_assoc($productResult);
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['verify_product'])) {
+    $updateQuery = "UPDATE products SET product_status = 'verified' WHERE product_status = 'draft'";
+    $updateResult = mysqli_query($conn, $updateQuery);
+
+    if ($updateResult) {
+        echo "<p class='text-success'><strong>Products Verified!</strong></p>";
+        echo "<meta http-equiv='refresh' content='0'>"; // Refresh the page to reflect changes
+    } else {
+        echo "Error updating product: " . mysqli_error($conn);
+    }
+}
 ?>
 
 <div>
@@ -11,6 +25,14 @@ require "includes/conn.php";
 
     <!-- Add Product Button (Opens Modal) -->
     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">+ Add Product</button>
+
+    <?php if (!empty($verify) && $verify['product_status'] == "Draft"): ?>
+        <form method="post" style="display: inline;">
+            <button type="submit" name="verify_product" class="btn btn-success">Verify</button>
+        </form>
+    <?php else: ?>
+        <p class="text-success"><strong>No draft</strong></p>
+    <?php endif; ?>
 </div>
 
 <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
