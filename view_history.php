@@ -54,7 +54,7 @@ $fetch_name = mysqli_fetch_assoc($fetch_result);
             <td><?= $row["id"] ?></td>
             <td><?= $row["project_name"] ?></td>
             <td><?= $row["order_date"] ?></td>
-            <td><?= $row["total_price"] ?></td>
+            <td>₱<?= $row["total_price"] ?></td>
             <!-- TENTATIVE PA -->
             <td><?= $row['agent_code'] ?></td>
             <td><?= $row['segment'] ?></td>

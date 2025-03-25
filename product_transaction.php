@@ -52,8 +52,8 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                 <td>" . htmlspecialchars($row["customer_name"]) . "</td>
                 <td>" . htmlspecialchars($row["date_created"]) . "</td>
                 <td>" . htmlspecialchars($row["quantity"]) . "</td>
-                <td>" . htmlspecialchars($row["price"]) . "</td>
-                <td>" . htmlspecialchars($row["subtotal"]) . "</td>
+                <td>₱" . htmlspecialchars($row["price"]) . "</td>
+                <td>₱" . htmlspecialchars($row["subtotal"]) . "</td>
                 <td>
                     <a href='view_po.php?id=" . $row['po_id'] . "' class='btn btn-outline-dark'>View</a>
                 </td>

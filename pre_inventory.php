@@ -128,7 +128,7 @@ if (isset($_POST['add_product'])) {
                 <td>" . htmlspecialchars($row["serial_code"]) . "</td>
                 <td>" . htmlspecialchars($row["lot_no"]) . "</td>
                 <td>" . htmlspecialchars($row["name"]) . "</td>
-                <td>" . htmlspecialchars($row["price"]) . "</td>
+                <td>₱" . htmlspecialchars($row["price"]) . "</td>
                 <td>" . htmlspecialchars($row["stock"]) . "</td>
                 <td>" . htmlspecialchars($row["maintaining_level"]) . "</td>
                 <td>" . htmlspecialchars($row["date_received"]) . "</td>

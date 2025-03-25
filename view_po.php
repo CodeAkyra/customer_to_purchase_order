@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <p><strong>Project Date Ended:</strong> <?= $order['date_ended'] ?: 'No Date Ended' ?></p>
     <p><strong>Purchase Order Date:</strong> <?= $order['order_date'] ?: 'No Order Date' ?></p>
     <p><strong>Purchase Order Status:</strong> <?= $order['status'] ?: 'No Status' ?></p>
-    <p><strong>Total Price:</strong> <?= number_format($total_price, 2) ?></p>
+    <p><strong>Total Price:</strong> ₱<?= number_format($total_price, 2) ?></p>
 
 
     <!-- 
@@ -111,8 +111,8 @@ MGA IDADAGDAG
                 <td><?= $row["lot_no"] ?></td>
                 <td><?= $row["name"] ?></td>
                 <td><?= $row["quantity"] ?></td>
-                <td><?= number_format($row["price"], 2) ?></td>
-                <td><?= number_format($row["subtotal"], 2) ?></td>
+                <td>₱<?= number_format($row["price"], 2) ?></td>
+                <td>₱<?= number_format($row["subtotal"], 2) ?></td>
             </tr>
         <?php endforeach; ?>
     </table>
