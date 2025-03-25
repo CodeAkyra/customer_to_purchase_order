@@ -169,10 +169,15 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
         <th>Maintaining Level</th>
         <th>Date Received</th>
         <th>Product Age (Days)</th>
+        <th>Action</th>
     </tr>
 
     <?php
-    $sql = "SELECT *, DATEDIFF(CURDATE(), date_received) AS product_age FROM products";
+    $sql = "SELECT p.*, DATEDIFF(CURDATE(), p.date_received) AS product_age, po_i.product_id
+    FROM products p
+    JOIN purchase_order_items po_i ON p.id = po_i.product_id
+    GROUP BY p.id;
+    ";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
@@ -187,6 +192,9 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
                 <td>" . htmlspecialchars($row["maintaining_level"]) . "</td>
                 <td>" . htmlspecialchars($row["date_received"]) . "</td>
                 <td>" . htmlspecialchars($row["product_age"]) . " days</td>
+                <td> <a href='product_transaction.php?id=" . $row["product_id"] . "' class='btn btn-primary mt-2'>View</a> </td> 
+                <!-- dapat dito na fefetch yung id sa purchase_order_items -->
+
             </tr>";
         }
     } else {
@@ -203,6 +211,15 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
 </div>
 
 <?php include "includes/footer.php"; ?>
+
+
+
+<!-- LATEST -->
+<!-- dapat kada row ng product, meron button sa gilid, tapos pag pindot, napupunta sa ibang page tapos nakikita lahat ng transaction na binili yung
+ product na yun  -->
+
+<!-- Modal siya tapos nafifilter by date, tapos may pagination -->
+
 
 
 
