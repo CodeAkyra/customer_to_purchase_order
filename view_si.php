@@ -1,4 +1,4 @@
-<title>View Delivery Receipt</title>
+<title>View Sales Invoice</title>
 <?php
 
 require "includes/conn.php";
@@ -44,11 +44,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Update order status to "Completed"
-        $updateStatusQuery = "UPDATE purchase_orders SET status = 'Delivery' WHERE id = $po_id";
+        $updateStatusQuery = "UPDATE purchase_orders SET status = 'Completed' WHERE id = $po_id";
+        // may isa pang ganito, for pending balance
+        // sa part na toh, pwede mag complete ng maraming pending balance hanggang sa ma completo yung exact amount na need bayaran ng customer
+        // naka base din toh sa credit terms and credit limits, need q pa intindihin unti yung sa part na yun
+
         mysqli_query($conn, $updateStatusQuery);
 
         // Refresh the page to reflect the changes
-        header("Location: view_dr.php?id=$po_id");
+        header("Location: view_si.php?id=$po_id");
         exit;
     }
 }
@@ -56,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 
-<h2>Delivery Receipt</h2>
+<h2>Sales Invoice</h2>
 <div id="printable_area">
 
     <p><strong>Agent:</strong> <?= $result['agent_code'] ?: 'No Agent Code' ?></p>
@@ -97,14 +101,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
 
 <!-- Complete Order Button (if not yet completed) -->
-<?php if ($result["status"] == "Approved"): ?>
+<?php if ($result["status"] == "Delivery"): ?>
     <form method="post" style="display: inline;">
-        <button type="submit" class="btn btn-success">Deliver Order</button>
+        <button type="submit" class="btn btn-success">Complete Order</button>
     </form>
 <?php elseif ($result["status"] == "Pending"): ?>
     <p class="text-success"><strong>This order is not yet approved.</strong></p>
-<?php elseif ($result["status"] == "Delivery"): ?>
-    <p class="text-success"><strong>This order is out for delivery.</strong></p>
+<?php elseif ($result["status"] == "Approved"): ?>
+    <p class="text-success"><strong>This order has already been approved.</strong></p>
 <?php elseif ($result["status"] == "Pending Balance"): ?>
     <p class="text-success"><strong>This order has a pending balance.</strong></p>
 <?php elseif ($result["status"] == "Completed"): ?>

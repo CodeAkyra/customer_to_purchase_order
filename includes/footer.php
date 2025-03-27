@@ -8,5 +8,8 @@
     <a href="inventory.php" class="btn btn-primary">Inventory</a>
     <a href="customer_information.php" class="btn btn-primary">Customer Information</a>
     <a href="project.php" class="btn btn-primary">Project</a>
+    <a href="customer_order_slip.php" class="btn btn-primary">Customer Order Slip</a>
     <a href="delivery_receipt.php" class="btn btn-primary">Delivery Receipt</a>
+    <a href="sales_invoice.php" class="btn btn-primary">Sales Invoice</a>
+
 </div>
