@@ -137,13 +137,6 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
     ?>
 </table>
 
-<div class="text-center mt-3">
-    <a href="index.php" class="btn btn-primary">Dashboard</a>
-    <a href="inventory.php" class="btn btn-primary">Inventory</a>
-    <a href="customer_information.php" class="btn btn-primary">Customer Information</a>
-    <a href="project.php" class="btn btn-primary"> Project </a>
-</div>
-
 <?php include "includes/footer.php"; ?>
 
 

@@ -65,13 +65,6 @@ $result = mysqli_query($conn, $sql);
     </div>
 </div>
 
-<div class="text-center mt-3">
-    <a href="index.php" class="btn btn-primary">Dashboard</a>
-    <a href="inventory.php" class="btn btn-primary">Inventory</a>
-    <a href="customer_information.php" class="btn btn-primary">Customer Information</a>
-    <a href="project.php" class="btn btn-primary"> Project </a>
-</div>
-
 <script>
     function openPDF(fileUrl) {
         document.getElementById('pdfFrame').src = fileUrl;

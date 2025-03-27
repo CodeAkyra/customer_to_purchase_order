@@ -98,3 +98,5 @@ mysqli_data_seek($po_result, 0);
 <?php endif; ?>
 
 <a href="project.php" class="btn btn-secondary">Back</a>
+
+<?php include "includes/footer.php"; ?>
