@@ -15,8 +15,9 @@ $po_id = $_GET['id'];
 //                JOIN project p ON po.project_id = p.project_id
 //                WHERE po.id = $po_id";
 
-$orderQuery = "SELECT po.id, po.customer_id, po.project_id, c.name, c.address, 
-                      po.order_date, po.status, p.project_name, p.date_started, p.date_ended,
+$orderQuery = "SELECT po.id, po.customer_id, po.project_id, po.order_date, po.status, po.delivery_address,
+                      c.name, c.address, 
+                      p.project_name, p.date_started, p.date_ended,
                       a.agent_code
                FROM purchase_orders po
                JOIN customers c ON po.customer_id = c.id 
@@ -56,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Update order status to "Completed"
-        $updateStatusQuery = "UPDATE purchase_orders SET status = 'Completed' WHERE id = $po_id";
+        $updateStatusQuery = "UPDATE purchase_orders SET status = 'Approved' WHERE id = $po_id";
         mysqli_query($conn, $updateStatusQuery);
 
         // Refresh the page to reflect the changes
@@ -72,6 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <p><strong>Agent:</strong> <?= $order['agent_code'] ?: 'No Agent Code' ?></p>
     <p><strong>Customer:</strong> <?= $order['name'] ?: 'No Customer Name' ?></p>
     <p><strong>Address:</strong> <?= $order['address'] ?: 'No Address' ?></p>
+    <p><strong>Delivery Address:</strong> <?= $order['delivery_address'] ?: 'No Delivery Address' ?></p>
     <p><strong>Project Name:</strong> <?= $order['project_name'] ?: 'No Project Name' ?></p>
     <p><strong>Project Date Started:</strong> <?= $order['date_started'] ?: 'No Date Started' ?></p>
     <p><strong>Project Date Ended:</strong> <?= $order['date_ended'] ?: 'No Date Ended' ?></p>
@@ -122,13 +124,20 @@ MGA IDADAGDAG
 <button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
 
 <!-- Complete Order Button (if not yet completed) -->
-<?php if ($order["status"] != "Completed"): ?>
+<?php if ($order["status"] == "Pending"): ?>
     <form method="post" style="display: inline;">
-        <button type="submit" class="btn btn-success">Complete Order</button>
+        <button type="submit" class="btn btn-success">Approve Order</button>
     </form>
-<?php else: ?>
+<?php elseif ($order["status"] == "Delivery"): ?>
+    <p class="text-success"><strong>This order is out for delivery.</strong></p>
+<?php elseif ($order["status"] == "Pending Balance"): ?>
+    <p class="text-success"><strong>This order has a pending balance.</strong></p>
+<?php elseif ($order["status"] == "Completed"): ?>
     <p class="text-success"><strong>This order has already been completed.</strong></p>
+<?php else: ?>
+    <p class="text-success"><strong>This order has already been approved.</strong></p>
 <?php endif; ?>
+
 
 <a href="view_history.php?id=<?= $order['customer_id'] ?>" class="btn btn-secondary">Back</a>
 <a href="view_project.php?id=<?= $order['project_id'] ?>" class="btn btn-info">View Project PO</a>
@@ -204,3 +213,5 @@ MGA IDADAGDAG
 </script>
 
 <!-- dapat bawat PO meron unique ID, combination ng Date(YYYY), Name?(not sure) PO_ID siguro, -->
+
+<?php include "includes/footer.php"; ?>

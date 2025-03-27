@@ -1,21 +1,21 @@
-<title>Delivery Receipt</title>
+<title>Customer Order Slip</title>
 <?php
 
 require "includes/conn.php";
 
-$sqlApprove = "SELECT po.*, c.name AS customer_name, c.address AS customer_address, a.agent_code, p.project_name
+$sqlPending = "SELECT po.*, c.name AS customer_name, c.address AS customer_address, a.agent_code, p.project_name
                 FROM purchase_orders po
                 LEFT JOIN customers c ON po.customer_id = c.id
                 LEFT JOIN agents a ON po.agent_id = a.id
                 LEFT JOIN project p ON po.project_id = p.project_id
-                WHERE po.status = 'Approved'
+                WHERE po.status = 'Pending'
                 GROUP BY po.id";
 
-$approvedResult = mysqli_query($conn, $sqlApprove);
+$pendingResult = mysqli_query($conn, $sqlPending);
 ?>
 
 <div>
-    <h3>Delivery Receipt Module</h3>
+    <h3>Customer Order Slip</h3>
     <table class="table">
         <tr>
             <th>Customer</th>
@@ -26,9 +26,9 @@ $approvedResult = mysqli_query($conn, $sqlApprove);
             <th>Status</th>
             <th>Actions</th>
         </tr>
-        <?php if (mysqli_num_rows($approvedResult) > 0): ?>
+        <?php if (mysqli_num_rows($pendingResult) > 0): ?>
 
-            <?php while ($row = mysqli_fetch_assoc($approvedResult)): ?>
+            <?php while ($row = mysqli_fetch_assoc($pendingResult)): ?>
                 <tr>
                     <td><?= $row['customer_name'] ?></td>
                     <td><?= $row['customer_address'] ?></td>
@@ -36,13 +36,13 @@ $approvedResult = mysqli_query($conn, $sqlApprove);
                     <td><?= $row['project_name'] ?></td>
                     <td><?= $row['status'] ?></td>
                     <td>
-                        <a href="view_dr.php?id=<?= $row['id'] ?>" class="btn btn-primary">View</a>
+                        <a href="view_po.php?id=<?= $row['id'] ?>" class="btn btn-primary">View</a>
                     </td>
                 </tr>
             <?php endwhile; ?>
 
         <?php else: ?>
-            <span>No approved orders available for delivery.</span>
+            <span>No pending customer order slip available.</span>
         <?php endif; ?>
     </table>
 </div>
