@@ -51,3 +51,7 @@ $deliveryResult = mysqli_query($conn, $sqlDelivery);
 </div>
 
 <?php include "includes/footer.php"; ?>
+
+
+<!-- sa database, mag kakaroon na ng new table siguro, pending_payment parang ganun -->
+<!-- naka reference yung customer, purchase order dito -->
