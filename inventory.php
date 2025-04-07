@@ -3,6 +3,7 @@
 
 <h2>Inventory</h2>
 <a href="pre_inventory.php" class="btn btn-primary">Pre-Inventory</a> <!-- Tentative pa yung name, naisip ko dito narin yung pag add ng products -->
+<!-- bukas ko nalang asikasuhin toh, tatanggalin ko na yung pre_inventory then ayusin q yung po_products.php -->
 
 <!-- Search Product -->
 <form action="" method="get">
@@ -137,6 +138,68 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
     ?>
 </table>
 
+
+
+<h3>Temporary Inventory</h3>
+<?php
+
+$sql = "SELECT *
+        FROM inventory i";
+
+$sql_query = mysqli_query($conn, $sql);
+
+
+?>
+
+<div>
+    <h3>Purchase Order Product Lists</h3>
+    <table class="table">
+        <tr>
+            <th>Date Received</th>
+            <th>Product Code</th>
+            <th>Lot Number</th>
+            <th>Category</th>
+            <th>Number of Cans</th>
+            <th>Pack Size</th>
+            <th>Liters</th>
+            <th>Reorder Level</th>
+            <th>Maintaining Level</th>
+            <th>Expiration Date</th>
+            <th>Manufacturer</th>
+            <th>Vendor</th>
+            <th>Description</th>
+            <th>Notes</th>
+            <th>SG</th>
+        </tr>
+        <?php if (mysqli_num_rows($sql_query) > 0): ?>
+            <?php while ($row = mysqli_fetch_assoc($sql_query)): ?>
+                <tr>
+                    <td><?= $row['date_received'] ?></td>
+                    <td><?= $row['product_code'] ?></td>
+                    <td><?= $row['lot_no'] ?></td>
+                    <td><?= $row['category'] ?></td>
+                    <td><?= $row['no_of_cans'] ?></td>
+                    <td><?= $row['pack_size'] ?></td>
+                    <td><?= $row['liters'] ?></td>
+                    <td><?= $row['reorder_level'] ?></td>
+                    <td><?= $row['maintaining_level'] ?></td>
+                    <td><?= $row['expiration_date'] ?></td>
+                    <td><?= $row['manufacturer'] ?></td>
+                    <td><?= $row['vendor'] ?></td>
+                    <td><?= $row['description'] ?></td>
+                    <td><?= $row['notes'] ?></td>
+                    <td><?= $row['sg'] ?></td>
+                </tr>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="17">No list of product available.</td>
+            </tr>
+        <?php endif; ?>
+    </table>
+</div>
+
+
 <?php include "includes/footer.php"; ?>
 
 
@@ -174,3 +237,16 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
 
 <!-- MARCH 21, 2025 -->
 <!-- dapat kada product meron view all transaction tapos na didisplay lahat ng COS na nacreate na kasama dun yung product na inorder -->
+
+
+
+
+<!-- April 8, 2025 -->
+<!-- if may same product na napupunta sa inventory, dapat dynamic silang lahat, exisitng (pink), new arrivied (pink) yung quantity nila is dapat mag merge, pero nakikita sila separately -->
+<!-- idea is dapat meron parang merge product then meron drop down? concept idk pa antok na ko HAHHAHA -->
+
+<!-- DELETE NIYO NALANG YUNG MGA TRINATRANSFER NIYO NA PRODUCT SA INVENTORY -->
+<!-- DELETE NIYO NALANG YUNG MGA TRINATRANSFER NIYO NA PRODUCT SA INVENTORY -->
+<!-- DELETE NIYO NALANG YUNG MGA TRINATRANSFER NIYO NA PRODUCT SA INVENTORY -->
+<!-- DELETE NIYO NALANG YUNG MGA TRINATRANSFER NIYO NA PRODUCT SA INVENTORY -->
+<!-- DELETE NIYO NALANG YUNG MGA TRINATRANSFER NIYO NA PRODUCT SA INVENTORY -->

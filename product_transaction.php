@@ -64,3 +64,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     }
     ?>
 </table>
+
+
+
+<!-- purpose ng page na toh is makita lahat ng products and yung transactions nila -->

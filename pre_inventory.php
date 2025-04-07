@@ -142,3 +142,6 @@ if (isset($_POST['add_product'])) {
 </table>
 
 <?php include "includes/footer.php"; ?>
+
+
+<!-- tatanggalin ko na toh mamaya, tinatamad na q -->
