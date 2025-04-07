@@ -10,18 +10,34 @@ $po_products_list = "SELECT *
                     ";
 
 $po_products_result = mysqli_query($conn, $po_products_list);
-$result = mysqli_fetch_assoc($po_products_result);
 
 ?>
 
+<a href="create_pop.php" class="btn btn-primary">Create PO Product</a>
 <div>
-    <strong>
-        <span><?php echo $result['id'] ?></span>
-        <span><?php echo $result['po_description'] ?></span>
-        <span><?php echo $result['po_order_date'] ?></span>
-        <span><?php echo $result['po_price'] ?></span>
-        <span><a href="view_pop_list.php?id=<?php echo $result['pop_id'] ?>" class="btn btn-primary">View</a></span>
-    </strong>
+    <h3>Purchase Order Product</h3>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Purchase Order Description</th>
+            <th>Purchase Order Date</th>
+            <th>Purchase Order Price</th>
+            <th>Action</th>
+        </tr>
+        <?php if (mysqli_num_rows($po_products_result) > 0): ?>
+            <?php while ($row = mysqli_fetch_assoc($po_products_result)): ?>
+                <tr>
+                    <td><?= $row['id'] ?></td>
+                    <td><?= $row['po_description'] ?></td>
+                    <td><?= $row['po_order_date'] ?></td>
+                    <td><?= $row['po_price'] ?></td>
+                    <td><a href="view_pop_list.php?id=<?php echo $row['pop_id'] ?>" class="btn btn-primary">View</a></td>
+                </tr>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <span> No purchase order product available. </span>
+        <?php endif; ?>
+    </table>
 </div>
 
 <div>
