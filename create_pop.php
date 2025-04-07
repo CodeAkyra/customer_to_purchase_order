@@ -130,6 +130,20 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['po_description']) && 
                 html += "</tr></thead><tbody>";
 
                 data.forEach(row => {
+                    // Convert date_received (row[0]) to YYYY-MM-DD
+                    const receivedParts = row[0]?.split('/');
+                    if (receivedParts?.length === 3) {
+                        const [dd, mm, yyyy] = receivedParts;
+                        row[0] = `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`;
+                    }
+
+                    // Convert expiration_date (row[10]) to YYYY-MM-DD
+                    const expirationParts = row[9]?.split('/');
+                    if (expirationParts?.length === 3) {
+                        const [dd, mm, yyyy] = expirationParts;
+                        row[9] = `${yyyy}-${mm.padStart(2, '0')}-${dd.padStart(2, '0')}`;
+                    }
+
                     html += "<tr>";
                     row.forEach(col => html += `<td>${col}</td>`);
                     html += "</tr>";
@@ -138,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['po_description']) && 
                 html += "</tbody></table>";
                 previewArea.innerHTML = html;
 
-                // Save data (no headers) to hidden input
+                // Save data (no headers) to hidden input, now with formatted dates
                 csvDataInput.value = JSON.stringify(data);
             },
             error: function(err) {
@@ -147,6 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['po_description']) && 
         });
     }
 </script>
+
 
 <?php include "includes/footer.php"; ?>
 
