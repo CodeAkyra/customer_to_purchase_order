@@ -3,6 +3,7 @@
 
 <h2>Inventory</h2>
 <a href="pre_inventory.php" class="btn btn-primary">Pre-Inventory</a> <!-- Tentative pa yung name, naisip ko dito narin yung pag add ng products -->
+<!-- bukas ko nalang asikasuhin toh, tatanggalin ko na yung pre_inventory then ayusin q yung po_products.php -->
 
 <!-- Search Product -->
 <form action="" method="get">
@@ -243,3 +244,9 @@ $sql_query = mysqli_query($conn, $sql);
 <!-- April 8, 2025 -->
 <!-- if may same product na napupunta sa inventory, dapat dynamic silang lahat, exisitng (pink), new arrivied (pink) yung quantity nila is dapat mag merge, pero nakikita sila separately -->
 <!-- idea is dapat meron parang merge product then meron drop down? concept idk pa antok na ko HAHHAHA -->
+
+<!-- DELETE NIYO NALANG YUNG MGA TRINATRANSFER NIYO NA PRODUCT SA INVENTORY -->
+<!-- DELETE NIYO NALANG YUNG MGA TRINATRANSFER NIYO NA PRODUCT SA INVENTORY -->
+<!-- DELETE NIYO NALANG YUNG MGA TRINATRANSFER NIYO NA PRODUCT SA INVENTORY -->
+<!-- DELETE NIYO NALANG YUNG MGA TRINATRANSFER NIYO NA PRODUCT SA INVENTORY -->
+<!-- DELETE NIYO NALANG YUNG MGA TRINATRANSFER NIYO NA PRODUCT SA INVENTORY -->

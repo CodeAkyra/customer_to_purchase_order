@@ -100,6 +100,8 @@ $pop_list_query = mysqli_query($conn, "SELECT * FROM purchase_order_product_list
                             <form method="POST" style="display:inline;">
                                 <input type="hidden" name="transfer_id" value="<?= $row['id'] ?>">
                                 <button type="submit" class="btn btn-success btn-sm">Transfer to Inventory</button>
+                                <!-- dapat meron dito search din -->
+                                <!-- eto na yung purpose ng pag add ng quantity sa inventory -->
                             </form>
                         <?php else: ?>
                             <span class="badge bg-secondary">Transferred</span>
@@ -123,3 +125,10 @@ $pop_list_query = mysqli_query($conn, "SELECT * FROM purchase_order_product_list
 
 
 <!-- lahat ng product na nakalista dito matratransfer sa inventory, pero mag sstay parin dito yung data for record purposes nalang siya -->
+
+
+<!-- PALITAN NIYO NALANG YUNG STATUS FROM TRANSFERRED TO PENDING -->
+<!-- PALITAN NIYO NALANG YUNG STATUS FROM TRANSFERRED TO PENDING -->
+<!-- PALITAN NIYO NALANG YUNG STATUS FROM TRANSFERRED TO PENDING -->
+<!-- PALITAN NIYO NALANG YUNG STATUS FROM TRANSFERRED TO PENDING -->
+<!-- PALITAN NIYO NALANG YUNG STATUS FROM TRANSFERRED TO PENDING -->
