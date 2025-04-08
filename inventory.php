@@ -138,13 +138,24 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
     ?>
 </table>
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 
 <h3>Temporary Inventory</h3>
+
+
 <?php
 
 $sql = "SELECT *
-        FROM inventory i";
+        FROM inventory i
+        GROUP BY i.product_code";
 
 $sql_query = mysqli_query($conn, $sql);
 
@@ -170,6 +181,7 @@ $sql_query = mysqli_query($conn, $sql);
             <th>Description</th>
             <th>Notes</th>
             <th>SG</th>
+            <th>Action</th>
         </tr>
         <?php if (mysqli_num_rows($sql_query) > 0): ?>
             <?php while ($row = mysqli_fetch_assoc($sql_query)): ?>
@@ -189,6 +201,16 @@ $sql_query = mysqli_query($conn, $sql);
                     <td><?= $row['description'] ?></td>
                     <td><?= $row['notes'] ?></td>
                     <td><?= $row['sg'] ?></td>
+                    <td>
+                        <button type="button"
+                            class="btn btn-success"
+                            data-bs-toggle="modal"
+                            data-bs-target="#viewProductModal"
+                            data-id="<?= htmlspecialchars($row['product_code']) ?>"
+                            onclick="openProductModal('<?= htmlspecialchars($row['product_code']) ?>')">
+                            Click me
+                        </button>
+                    </td>
                 </tr>
             <?php endwhile; ?>
         <?php else: ?>
@@ -199,6 +221,103 @@ $sql_query = mysqli_query($conn, $sql);
     </table>
 </div>
 
+<div class="modal fade" id="viewProductModal" tabindex="-1" aria-labelledby="viewProductLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewProductLabel">View Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tbody id="modalProductDetails">
+                        <!-- Product details will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openProductModal(productId) {
+        // Clear previous details
+        const modalBody = document.getElementById("modalProductDetails");
+        modalBody.innerHTML = ""; // Clear existing content
+
+        // Find the row that contains the product ID
+        const rows = document.querySelectorAll("table tr");
+        rows.forEach(row => {
+            const codeCell = row.querySelector("td:nth-child(2)"); // Assuming product_code is in the 2nd column
+            if (codeCell && codeCell.textContent === productId) {
+                // Create rows for the modal
+                const details = [{
+                        label: "Product Code",
+                        value: codeCell.textContent
+                    },
+                    {
+                        label: "Lot Number",
+                        value: row.cells[2].textContent
+                    },
+                    {
+                        label: "Category",
+                        value: row.cells[3].textContent
+                    },
+                    {
+                        label: "Number of Cans",
+                        value: row.cells[4].textContent
+                    },
+                    {
+                        label: "Pack Size",
+                        value: row.cells[5].textContent
+                    },
+                    {
+                        label: "Liters",
+                        value: row.cells[6].textContent
+                    },
+                    {
+                        label: "Reorder Level",
+                        value: row.cells[7].textContent
+                    },
+                    {
+                        label: "Maintaining Level",
+                        value: row.cells[8].textContent
+                    },
+                    {
+                        label: "Expiration Date",
+                        value: row.cells[9].textContent
+                    },
+                    {
+                        label: "Manufacturer",
+                        value: row.cells[10].textContent
+                    },
+                    {
+                        label: "Vendor",
+                        value: row.cells[11].textContent
+                    },
+                    {
+                        label: "Description",
+                        value: row.cells[12].textContent
+                    },
+                    {
+                        label: "Notes",
+                        value: row.cells[13].textContent
+                    },
+                    {
+                        label: "SG",
+                        value: row.cells[14].textContent
+                    }
+                ];
+
+                details.forEach(detail => {
+                    const newRow = document.createElement("tr");
+                    newRow.innerHTML = `<td><strong>${detail.label}:</strong> ${detail.value}</td>`;
+                    modalBody.appendChild(newRow);
+                });
+            }
+        });
+    }
+</script>
 
 <?php include "includes/footer.php"; ?>
 

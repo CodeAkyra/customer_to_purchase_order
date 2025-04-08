@@ -48,3 +48,6 @@ $pendingResult = mysqli_query($conn, $sqlPending);
 </div>
 
 <?php include "includes/footer.php"; ?>
+
+
+<!-- dapat narerecord na yung downpayment ng customer dito -->
