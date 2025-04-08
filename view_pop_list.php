@@ -78,7 +78,7 @@ $pop_list_query = mysqli_query($conn, "SELECT * FROM purchase_order_product_list
         </tr>
         <?php if (mysqli_num_rows($pop_list_query) > 0): ?>
             <?php while ($row = mysqli_fetch_assoc($pop_list_query)): ?>
-                <tr>
+                <tr style="width: 50px; height: 100px;">
                     <td><?= $row['date_received'] ?></td>
                     <td><?= $row['product_code'] ?></td>
                     <td><?= $row['lot_no'] ?></td>
@@ -125,6 +125,7 @@ $pop_list_query = mysqli_query($conn, "SELECT * FROM purchase_order_product_list
 
 
 <!-- lahat ng product na nakalista dito matratransfer sa inventory, pero mag sstay parin dito yung data for record purposes nalang siya -->
+<!-- may search filter din ditu, pwedeng using product_code and lot_no. and dito narin papasok si barcode scanning. -->
 
 
 <!-- PALITAN NIYO NALANG YUNG STATUS FROM TRANSFERRED TO PENDING -->

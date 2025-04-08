@@ -114,3 +114,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php endif; ?>
 
 <?php include "includes/footer.php"; ?>
+
+<!-- Broken ang pag download ng pdf -->

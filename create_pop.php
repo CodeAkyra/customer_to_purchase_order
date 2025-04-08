@@ -89,9 +89,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['po_description']) && 
         <h4>Import Product List via CSV</h4>
         <input type="file" id="csvFileInput" accept=".csv" class="form-control w-50" required>
         <button class="btn btn-warning my-2" type="button" onclick="previewCSV()">Preview CSV</button>
+        <button type="submit" class="btn btn-success">Create Purchase Order with Product List</button>
         <div id="csvPreviewArea"></div>
         <input type="hidden" name="csv_data" id="csvDataInput">
-        <button type="submit" class="btn btn-success mt-3">Create Purchase Order with Product List</button>
     </form>
 </div>
 
