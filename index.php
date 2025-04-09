@@ -247,10 +247,11 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                                     }
                                                 ?>
                                                     <tr class="table-primary">
-                                                        <td colspan="2">
+                                                        <td colspan="8">
                                                             <div class="d-flex justify-content-between">
                                                                 <strong><?= strtoupper(htmlspecialchars($area)) ?></strong>
-                                                                <strong>₱<?= number_format($areaTotal, 2) ?></strong>
+                                                                <span><strong>PhP </strong><?= number_format($areaTotal, 2) ?></span>
+                                                                <span><strong>ltrs </strong><?= number_format($areaTotal, 2) ?></span> <!-- tentative -->
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -258,23 +259,23 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                                                         $segmentTotal = array_sum($agents); // Calculate segment total
                                                     ?>
                                                         <tr class="table-secondary">
-                                                            <td colspan="2" style="padding-left: 20px;">
+                                                            <td colspan="8" style="padding-left: 20px;">
                                                                 <div class="d-flex justify-content-between">
                                                                     <strong>— <?= strtoupper(htmlspecialchars($segment)) ?></strong>
-                                                                    <strong>₱<?= number_format($segmentTotal, 2) ?></strong>
+                                                                    <span><strong>PhP </strong><?= number_format($segmentTotal, 2) ?></span>
+                                                                    <span><strong>ltrs </strong><?= number_format($segmentTotal, 2) ?></span> <!-- tentative -->
                                                                 </div>
                                                             </td>
                                                         </tr>
                                                         <th>Agent Code</th>
                                                         <th>Quota</th>
-                                                        <!-- <th>
-                                                            <center>Quota / Volume(Liters)</center>
-                                                        </th> -->
+                                                        <th>Quota / Volume(Liters)</th>
                                                         <!-- sunod na toh, may madadagdag din kasi sa column sa product -->
                                                         <?php foreach ($agents as $agent => $total): ?>
                                                             <tr>
                                                                 <td style="padding-left: 40px;"><?= htmlspecialchars($agent) ?></td>
-                                                                <td>₱<?= number_format($total, 2) ?></td>
+                                                                <td><?= number_format($total, 2) ?></td>
+                                                                <td><?= number_format($total, 2) ?></td> <!-- tentative -->
                                                             </tr>
                                                         <?php endforeach; ?>
                                                     <?php endforeach; ?>
