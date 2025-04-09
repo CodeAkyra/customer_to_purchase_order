@@ -152,14 +152,12 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
 
 
 <?php
+$sql = "SELECT * 
+FROM inventory
 
-$sql = "SELECT *
-        FROM inventory i
-        GROUP BY i.product_code";
+-- GROUP BY product_code"; // di ko maayos wthhhhhhhhhhhhhhhhhhhhhh
 
 $sql_query = mysqli_query($conn, $sql);
-
-
 ?>
 
 <div>
@@ -206,7 +204,6 @@ $sql_query = mysqli_query($conn, $sql);
                             class="btn btn-success"
                             data-bs-toggle="modal"
                             data-bs-target="#viewProductModal"
-                            data-id="<?= htmlspecialchars($row['product_code']) ?>"
                             onclick="openProductModal('<?= htmlspecialchars($row['product_code']) ?>')">
                             Click me
                         </button>
@@ -215,25 +212,46 @@ $sql_query = mysqli_query($conn, $sql);
             <?php endwhile; ?>
         <?php else: ?>
             <tr>
-                <td colspan="17">No list of product available.</td>
+                <td colspan="17">No list of products available.</td>
             </tr>
         <?php endif; ?>
     </table>
 </div>
 
 <div class="modal fade" id="viewProductModal" tabindex="-1" aria-labelledby="viewProductLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewProductLabel">View Product</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table">
-                    <tbody id="modalProductDetails">
-                        <!-- Product details will be inserted here -->
-                    </tbody>
-                </table>
+                <div style="overflow-x:auto;">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date Received</th>
+                                <th>Product Code</th>
+                                <th>Lot Number</th>
+                                <th>Category</th>
+                                <th>Number of Cans</th>
+                                <th>Pack Size</th>
+                                <th>Liters</th>
+                                <th>Reorder Level</th>
+                                <th>Maintaining Level</th>
+                                <th>Expiration Date</th>
+                                <th>Manufacturer</th>
+                                <th>Vendor</th>
+                                <th>Description</th>
+                                <th>Notes</th>
+                                <th>SG</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productDataBody">
+                            <!-- Data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -241,79 +259,34 @@ $sql_query = mysqli_query($conn, $sql);
 
 <script>
     function openProductModal(productId) {
-        // Clear previous details
-        const modalBody = document.getElementById("modalProductDetails");
-        modalBody.innerHTML = ""; // Clear existing content
+        const productDataBody = document.getElementById("productDataBody");
+        productDataBody.innerHTML = ""; // Clear existing content
 
-        // Find the row that contains the product ID
+        // Find all rows that match the product ID
         const rows = document.querySelectorAll("table tr");
         rows.forEach(row => {
             const codeCell = row.querySelector("td:nth-child(2)"); // Assuming product_code is in the 2nd column
             if (codeCell && codeCell.textContent === productId) {
-                // Create rows for the modal
-                const details = [{
-                        label: "Product Code",
-                        value: codeCell.textContent
-                    },
-                    {
-                        label: "Lot Number",
-                        value: row.cells[2].textContent
-                    },
-                    {
-                        label: "Category",
-                        value: row.cells[3].textContent
-                    },
-                    {
-                        label: "Number of Cans",
-                        value: row.cells[4].textContent
-                    },
-                    {
-                        label: "Pack Size",
-                        value: row.cells[5].textContent
-                    },
-                    {
-                        label: "Liters",
-                        value: row.cells[6].textContent
-                    },
-                    {
-                        label: "Reorder Level",
-                        value: row.cells[7].textContent
-                    },
-                    {
-                        label: "Maintaining Level",
-                        value: row.cells[8].textContent
-                    },
-                    {
-                        label: "Expiration Date",
-                        value: row.cells[9].textContent
-                    },
-                    {
-                        label: "Manufacturer",
-                        value: row.cells[10].textContent
-                    },
-                    {
-                        label: "Vendor",
-                        value: row.cells[11].textContent
-                    },
-                    {
-                        label: "Description",
-                        value: row.cells[12].textContent
-                    },
-                    {
-                        label: "Notes",
-                        value: row.cells[13].textContent
-                    },
-                    {
-                        label: "SG",
-                        value: row.cells[14].textContent
-                    }
-                ];
-
-                details.forEach(detail => {
-                    const newRow = document.createElement("tr");
-                    newRow.innerHTML = `<td><strong>${detail.label}:</strong> ${detail.value}</td>`;
-                    modalBody.appendChild(newRow);
-                });
+                // Create a new row for each matching product
+                const newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                    <td>${row.cells[0].textContent}</td>
+                    <td>${codeCell.textContent}</td>
+                    <td>${row.cells[2].textContent}</td>
+                    <td>${row.cells[3].textContent}</td>
+                    <td>${row.cells[4].textContent}</td>
+                    <td>${row.cells[5].textContent}</td>
+                    <td>${row.cells[6].textContent}</td>
+                    <td>${row.cells[7].textContent}</td>
+                    <td>${row.cells[8].textContent}</td>
+                    <td>${row.cells[9].textContent}</td>
+                    <td>${row.cells[10].textContent}</td>
+                    <td>${row.cells[11].textContent}</td>
+                    <td>${row.cells[12].textContent}</td>
+                    <td>${row.cells[13].textContent}</td>
+                    <td>${row.cells[14].textContent}</td>
+                `;
+                productDataBody.appendChild(newRow); // kita ko na problem, if nag remove ako sa taas, di nag didisplay yung sa modal
             }
         });
     }
