@@ -33,14 +33,15 @@ $resultRecentPOs = mysqli_query(
     $conn,
     "SELECT po.id, c.name AS customer_name, po.status, po.date_created,
      COALESCE((SELECT SUM(subtotal) FROM purchase_order_items WHERE po_id = po.id), 0) AS total_price
-     FROM purchase_orders po JOIN customers c ON po.customer_id = c.id 
+     FROM purchase_orders po 
+     LEFT JOIN customers c ON po.customer_id = c.id 
      ORDER BY po.date_created DESC LIMIT 5"
 );
 
 $resultTopProducts = mysqli_query(
     $conn,
-    "SELECT p.name, SUM(po_items.quantity) AS total_ordered FROM purchase_order_items po_items 
-     JOIN products p ON po_items.product_id = p.id GROUP BY p.id ORDER BY total_ordered DESC LIMIT 5"
+    "SELECT p.description, SUM(po_items.quantity) AS total_ordered FROM purchase_order_items po_items 
+     LEFT JOIN products p ON po_items.product_id = p.id GROUP BY p.id ORDER BY total_ordered DESC LIMIT 5"
 );
 
 $selectedYear = $_GET['year'] ?? date('Y');
@@ -395,7 +396,7 @@ for ($monthNumber = 1; $monthNumber <= 12; $monthNumber++) {
                     </tr>
                     <?php while ($row = mysqli_fetch_assoc($resultTopProducts)): ?>
                         <tr>
-                            <td><?= htmlspecialchars($row['name']) ?></td>
+                            <td><?= htmlspecialchars($row['description']) ?></td>
                             <td><?= htmlspecialchars($row['total_ordered']) ?></td>
                         </tr>
                     <?php endwhile; ?>

@@ -143,15 +143,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <?php while ($product = mysqli_fetch_assoc($productResult)): ?>
                                 <tr>
                                     <td><?= $product['id'] ?></td>
-                                    <td><?= $product['serial_code'] ?></td>
+                                    <td><?= $product['product_code'] ?></td>
                                     <td><?= $product['lot_no'] ?></td>
-                                    <td><?= $product['name'] ?></td>
+                                    <td><?= $product['description'] ?></td>
                                     <td><?= $product['stock'] ?></td>
                                     <td>
                                         <button class="btn btn-success add-to-table"
                                             data-id="<?= $product['id'] ?>"
-                                            data-name="<?= $product['name'] ?>"
-                                            data-serial="<?= $product['serial_code'] ?>"
+                                            data-name="<?= $product['description'] ?>"
+                                            data-serial="<?= $product['product_code'] ?>"
                                             data-lot="<?= $product['lot_no'] ?>"
                                             data-stock="<?= $product['stock'] ?>">
                                             Add

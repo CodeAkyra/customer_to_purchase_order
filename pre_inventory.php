@@ -144,4 +144,4 @@ if (isset($_POST['add_product'])) {
 <?php include "includes/footer.php"; ?>
 
 
-<!-- tatanggalin ko na toh mamaya, tinatamad na q -->
+<!-- wala na tong page na toh, pero may kailangan pa ako dito -->

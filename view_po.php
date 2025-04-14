@@ -30,7 +30,7 @@ $orderResult = mysqli_query($conn, $orderQuery);
 $order = mysqli_fetch_assoc($orderResult);
 
 // Fetch order items
-$itemsQuery = "SELECT p.id, p.serial_code, p.lot_no, p.name, oi.quantity, oi.price, oi.subtotal 
+$itemsQuery = "SELECT p.id, p.product_code, p.lot_no, p.description, oi.quantity, oi.price, oi.subtotal 
                FROM purchase_order_items oi
                JOIN products p ON oi.product_id = p.id 
                WHERE oi.po_id = $po_id";
@@ -47,15 +47,6 @@ while ($row = mysqli_fetch_assoc($itemsResult)) {
 // Handle "Complete Order" action
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($order["status"] != "Completed") {
-        foreach ($items as $item) {
-            $product_id = $item["id"];
-            $ordered_quantity = $item["quantity"];
-
-            // Deduct stock from inventory
-            $updateStockQuery = "UPDATE products SET stock = stock - $ordered_quantity WHERE id = $product_id";
-            mysqli_query($conn, $updateStockQuery);
-        }
-
         // Update order status to "Completed"
         $updateStatusQuery = "UPDATE purchase_orders SET status = 'Approved' WHERE id = $po_id";
         mysqli_query($conn, $updateStatusQuery);
@@ -109,9 +100,9 @@ MGA IDADAGDAG
         </tr>
         <?php foreach ($items as $row): ?>
             <tr>
-                <td><?= $row["serial_code"] ?></td>
+                <td><?= $row["product_code"] ?></td>
                 <td><?= $row["lot_no"] ?></td>
-                <td><?= $row["name"] ?></td>
+                <td><?= $row["description"] ?></td>
                 <td><?= $row["quantity"] ?></td>
                 <td>₱<?= number_format($row["price"], 2) ?></td>
                 <td>₱<?= number_format($row["subtotal"], 2) ?></td>
@@ -163,7 +154,7 @@ MGA IDADAGDAG
         let y = 30;
         let details = [
             "Agents: <?= $order['agent_code'] ?>",
-            "Customer: <?= $order['name'] ?>",
+            "Customer: <?= $order['description'] ?>",
             "Address: <?= $order['address'] ?>",
             "Project Name: <?= $order['project_name'] ?>",
             "Project Date Started: <?= $order['date_started'] ?>",
@@ -189,7 +180,7 @@ MGA IDADAGDAG
         // Define table columns and rows
         let columns = ["Serial Code", "Lot Number", "Product Name", "Quantity", "Price", "Subtotal"];
         let rows = [
-            <?php foreach ($items as $row): ?>["<?= $row['serial_code'] ?>", "<?= $row['lot_no'] ?>", "<?= $row['name'] ?>", "<?= $row['quantity'] ?>", "<?= number_format($row['price'], 2) ?>", "<?= number_format($row['subtotal'], 2) ?>"],
+            <?php foreach ($items as $row): ?>["<?= $row['product_code'] ?>", "<?= $row['lot_no'] ?>", "<?= $row['description'] ?>", "<?= $row['quantity'] ?>", "<?= number_format($row['price'], 2) ?>", "<?= number_format($row['subtotal'], 2) ?>"],
             <?php endforeach; ?>
         ];
 

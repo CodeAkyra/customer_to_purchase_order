@@ -2,13 +2,11 @@
 <?php require "includes/conn.php"; ?>
 
 <h2>Inventory</h2>
-<a href="pre_inventory.php" class="btn btn-primary">Pre-Inventory</a> <!-- Tentative pa yung name, naisip ko dito narin yung pag add ng products -->
-<!-- bukas ko nalang asikasuhin toh, tatanggalin ko na yung pre_inventory then ayusin q yung po_products.php -->
 
 <!-- Search Product -->
 <form action="" method="get">
     <h3>SEARCH PRODUCT BY SERIAL CODE OR LOT NUMBER</h3>
-    <label>Enter Serial Code</label>
+    <label>Enter Product Code</label>
     <input type="text" name="serialCode" placeholder="Enter Here" class="form-control">
 
     <label>Enter Lot Number</label>
@@ -22,7 +20,7 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
     echo "<table class='table'>";
     echo "<tr>
             <th>ID</th>
-            <th>Serial Code</th>
+            <th>Product Code</th>
             <th>Lot Number</th>
             <th>Name</th>
             <th>Price</th>
@@ -34,8 +32,8 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
     $found = false;
 
     if (!empty($_GET['serialCode'])) {
-        $serial_code = mysqli_real_escape_string($conn, $_GET['serialCode']);
-        $sql = "SELECT * FROM products WHERE serial_code = '$serial_code'";
+        $product_code = mysqli_real_escape_string($conn, $_GET['serialCode']);
+        $sql = "SELECT * FROM products WHERE product_code = '$product_code'";
         $result = mysqli_query($conn, $sql);
 
         if (mysqli_num_rows($result) > 0) {
@@ -43,14 +41,14 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>
                         <td>" . htmlspecialchars($row["id"]) . "</td>
-                        <td>" . htmlspecialchars($row["serial_code"]) . "</td>
+                        <td>" . htmlspecialchars($row["product_code"]) . "</td>
                         <td>" . htmlspecialchars($row["lot_no"]) . "</td>
-                        <td>" . htmlspecialchars($row["name"]) . "</td>
+                        <td>" . htmlspecialchars($row["description"]) . "</td>
                         <td>" . htmlspecialchars($row["price"]) . "</td>
                         <td>" . htmlspecialchars($row["stock"]) . "</td>
                         <td>" . htmlspecialchars($row["maintaining_level"]) . "</td>
                         <td>
-                            <a href='add_quantity.php?serial_code=" . urlencode($row["serial_code"]) . "' class='btn btn-primary'>Edit</a>
+                            <a href='add_quantity.php?product_code=" . urlencode($row["product_code"]) . "' class='btn btn-primary'>Edit</a>
                         </td>
                     </tr>";
             }
@@ -67,9 +65,9 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
             while ($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>
                         <td>" . htmlspecialchars($row["id"]) . "</td>
-                        <td>" . htmlspecialchars($row["serial_code"]) . "</td>
+                        <td>" . htmlspecialchars($row["product_code"]) . "</td>
                         <td>" . htmlspecialchars($row["lot_no"]) . "</td>
-                        <td>" . htmlspecialchars($row["name"]) . "</td>
+                        <td>" . htmlspecialchars($row["description"]) . "</td>
                         <td>" . htmlspecialchars($row["price"]) . "</td>
                         <td>" . htmlspecialchars($row["stock"]) . "</td>
                         <td>" . htmlspecialchars($row["maintaining_level"]) . "</td>
@@ -95,13 +93,23 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
 <table class='table'>
     <tr>
         <th>ID</th>
-        <th>Serial Code</th>
-        <th>Lot Number</th>
-        <th>Name</th>
+        <th>Date Received</th>
+        <th>Product Code</th>
+        <th>Lot No.</th>
+        <th>Category</th>
+        <th>No. of Cans</th>
+        <th>Pack Size</th>
+        <th>Liters</th>
+        <th>Re-order Level</th>
+        <th>Maintaining Level</th>
+        <th>Expiration Date</th>
+        <th>Manufacturer</th>
+        <th>Vendor</th>
+        <th>Description</th>
+        <th>Notes</th>
+        <th>SG</th>
         <th>Price</th>
         <th>Stock</th>
-        <th>Maintaining Level</th>
-        <th>Date Received</th>
         <th>Product Age (Days)</th>
         <th>Action</th>
     </tr>
@@ -119,13 +127,23 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr>
                 <td>" . htmlspecialchars($row["id"]) . "</td>
-                <td>" . htmlspecialchars($row["serial_code"]) . "</td>
+                <td>" . htmlspecialchars($row["date_received"]) . "</td>
+                <td>" . htmlspecialchars($row["product_code"]) . "</td>
                 <td>" . htmlspecialchars($row["lot_no"]) . "</td>
-                <td>" . htmlspecialchars($row["name"]) . "</td>
+                <td>" . htmlspecialchars($row["category"]) . "</td>
+                <td>" . htmlspecialchars($row["no_of_cans"]) . "</td>
+                <td>" . htmlspecialchars($row["pack_size"]) . "</td>
+                <td>" . htmlspecialchars($row["liters"]) . "</td>
+                <td>" . htmlspecialchars($row["reorder_level"]) . "</td>
+                <td>" . htmlspecialchars($row["maintaining_level"]) . "</td>
+                <td>" . htmlspecialchars($row["expiration_date"]) . "</td>
+                <td>" . htmlspecialchars($row["manufacturer"]) . "</td>
+                <td>" . htmlspecialchars($row["vendor"]) . "</td>
+                <td>" . htmlspecialchars($row["description"]) . "</td>
+                <td>" . htmlspecialchars($row["notes"]) . "</td>
+                <td>" . htmlspecialchars($row["sg"]) . "</td>
                 <td>₱" . htmlspecialchars($row["price"]) . "</td>
                 <td>" . htmlspecialchars($row["stock"]) . "</td>
-                <td>" . htmlspecialchars($row["maintaining_level"]) . "</td>
-                <td>" . htmlspecialchars($row["date_received"]) . "</td>
                 <td>" . htmlspecialchars($row["product_age"]) . " days</td>
                 <td> <a href='product_transaction.php?id=" . $row["product_id"] . "' class='btn btn-primary mt-2'>View</a> </td> 
                 <!-- dapat dito na fefetch yung id sa purchase_order_items -->
@@ -308,7 +326,7 @@ $sql_query = mysqli_query($conn, $sql);
 <!-- Must be able to add new product -->
 <!-- Must be able to add quantity to the same product na existing -->
 <!-- Must notify user when the product is low or depleting -->
-<!-- Implement Batch No. and Serial Code with barcode scanning (gamitin yung scratch it cards as an example) -->
+<!-- Implement Batch No. and Product Code with barcode scanning (gamitin yung scratch it cards as an example) -->
 
 
 <!-- nakalimutan mag pull woops new learnings -->
@@ -317,8 +335,8 @@ $sql_query = mysqli_query($conn, $sql);
 <!-- hmmm new problem, pano kung nag order ng same product tapos iaadd sa inventory, hindi naman pwede pag samahin yung two products na mag ka iba na ng takbo yung age ng product -->
 <!-- Example: -->
 
-<!-- Existing: Black Paint = (serial_code) 1234567890, (lot_number) 1020304050, (age) 50 days ago, (remaining_stock) 100 -->
-<!-- New Arrival: Black Paint = (serial_code) 1234567890, (lot_number) 1020304050, (age) 0 days ago, (arrived) 500 -->
+<!-- Existing: Black Paint = (product_code) 1234567890, (lot_number) 1020304050, (age) 50 days ago, (remaining_stock) 100 -->
+<!-- New Arrival: Black Paint = (product_code) 1234567890, (lot_number) 1020304050, (age) 0 days ago, (arrived) 500 -->
 
 <!-- both are the same, pero bawal pag samahin yung dalawa. Siguro dapat pwede sila mag merge dinamically yung existing quantity, and na sesegregate sila by age. -->
 <!-- Mag kakaroon ng revision sa Inventory -->

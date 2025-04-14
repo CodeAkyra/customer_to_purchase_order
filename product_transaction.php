@@ -6,7 +6,7 @@ require "includes/conn.php";
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $product_id = $_GET['id'];
 
-    $poIQuery = "SELECT po_i.product_id, po_i.id, po_i.po_id, po_i.quantity, po_i.price, po_i.subtotal, po.date_created, p.name, c.name as customer_name
+    $poIQuery = "SELECT po_i.product_id, po_i.id, po_i.po_id, po_i.quantity, po_i.price, po_i.subtotal, po.date_created, p.description, c.name as customer_name
     FROM purchase_order_items po_i
     LEFT JOIN purchase_orders po ON po_i.po_id = po.id
     LEFT JOIN customers c ON po.customer_id = c.id
@@ -17,7 +17,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
     if (mysqli_num_rows($poIResult) > 0) {
         $fetchName = mysqli_fetch_array($poIResult);
-        $productName = htmlspecialchars($fetchName['name']);
+        $productName = htmlspecialchars($fetchName['description']);
     } else {
         $productName = "No Transactions Yet";
     }
@@ -48,7 +48,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         mysqli_data_seek($poIResult, 0);
         while ($row = mysqli_fetch_array($poIResult)) {
             echo "<tr>
-                <td>" . htmlspecialchars($row["name"]) . "</td>
+                <td>" . htmlspecialchars($row["description"]) . "</td>
                 <td>" . htmlspecialchars($row["customer_name"]) . "</td>
                 <td>" . htmlspecialchars($row["date_created"]) . "</td>
                 <td>" . htmlspecialchars($row["quantity"]) . "</td>

@@ -18,7 +18,7 @@ $sqlDelivery = "SELECT po.id, po.customer_id, po.project_id, po.order_date, po.s
 $deliveryResult = mysqli_query($conn, $sqlDelivery);
 $result = mysqli_fetch_assoc($deliveryResult);
 
-$itemsQuery = "SELECT p.id, p.serial_code, p.lot_no, p.name, oi.quantity, oi.price, oi.subtotal 
+$itemsQuery = "SELECT p.id, p.product_code, p.lot_no, p.description, oi.quantity, oi.price, oi.subtotal 
                FROM purchase_order_items oi
                JOIN products p ON oi.product_id = p.id 
                WHERE oi.po_id = $po_id";
@@ -34,14 +34,6 @@ while ($row = mysqli_fetch_assoc($itemsResult)) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result["status"] != "Completed") {
-        foreach ($items as $item) {
-            $product_id = $item["id"];
-            $ordered_quantity = $item["quantity"];
-
-            // Deduct stock from inventory
-            $updateStockQuery = "UPDATE products SET stock = stock - $ordered_quantity WHERE id = $product_id";
-            mysqli_query($conn, $updateStockQuery);
-        }
 
         // Update order status to "Completed"
         $updateStatusQuery = "UPDATE purchase_orders SET status = 'Delivery' WHERE id = $po_id";
@@ -82,9 +74,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </tr>
         <?php foreach ($items as $row): ?>
             <tr>
-                <td><?= $row["serial_code"] ?></td>
+                <td><?= $row["product_code"] ?></td>
                 <td><?= $row["lot_no"] ?></td>
-                <td><?= $row["name"] ?></td>
+                <td><?= $row["description"] ?></td>
                 <td><?= $row["quantity"] ?></td>
                 <td>₱<?= number_format($row["price"], 2) ?></td>
                 <td>₱<?= number_format($row["subtotal"], 2) ?></td>

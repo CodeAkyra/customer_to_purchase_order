@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['transfer_id'])) {
 
     if ($item = mysqli_fetch_assoc($fetchItem)) {
         // Insert into inventory :D
-        $stmt = $conn->prepare("INSERT INTO inventory (date_received, product_code, lot_no, category, no_of_cans, pack_size, liters, reorder_level, maintaining_level, expiration_date, manufacturer, vendor, description, notes, sg) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO products (date_received, product_code, lot_no, category, no_of_cans, pack_size, liters, reorder_level, maintaining_level, expiration_date, manufacturer, vendor, description, notes, sg) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
         $stmt->bind_param(
             "ssssidsddssssss",
