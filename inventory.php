@@ -87,228 +87,82 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
 }
 ?>
 
-<h2>INVENTORY TABLE</h2>
+<div class="container my-5">
+    <h2 class="text-center mb-4">Inventory Table</h2>
 
-<!-- Inventory Table -->
-<table class='table'>
-    <tr>
-        <th>ID</th>
-        <th>Date Received</th>
-        <th>Product Code</th>
-        <th>Lot No.</th>
-        <th>Category</th>
-        <th>No. of Cans</th>
-        <th>Pack Size</th>
-        <th>Liters</th>
-        <th>Re-order Level</th>
-        <th>Maintaining Level</th>
-        <th>Expiration Date</th>
-        <th>Manufacturer</th>
-        <th>Vendor</th>
-        <th>Description</th>
-        <th>Notes</th>
-        <th>SG</th>
-        <th>Price</th>
-        <th>Stock</th>
-        <th>Product Age (Days)</th>
-        <th>Action</th>
-    </tr>
-
-    <?php
-    $sql = "SELECT p.*, DATEDIFF(CURDATE(), p.date_received) AS product_age, po_i.product_id
-    FROM products p
-    LEFT JOIN purchase_order_items po_i ON p.id = po_i.product_id
-    WHERE p.product_status = 'Verified'
-    GROUP BY p.id;
-    ";
-    $result = mysqli_query($conn, $sql);
-
-    if (mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo "<tr>
-                <td>" . htmlspecialchars($row["id"]) . "</td>
-                <td>" . htmlspecialchars($row["date_received"]) . "</td>
-                <td>" . htmlspecialchars($row["product_code"]) . "</td>
-                <td>" . htmlspecialchars($row["lot_no"]) . "</td>
-                <td>" . htmlspecialchars($row["category"]) . "</td>
-                <td>" . htmlspecialchars($row["no_of_cans"]) . "</td>
-                <td>" . htmlspecialchars($row["pack_size"]) . "</td>
-                <td>" . htmlspecialchars($row["liters"]) . "</td>
-                <td>" . htmlspecialchars($row["reorder_level"]) . "</td>
-                <td>" . htmlspecialchars($row["maintaining_level"]) . "</td>
-                <td>" . htmlspecialchars($row["expiration_date"]) . "</td>
-                <td>" . htmlspecialchars($row["manufacturer"]) . "</td>
-                <td>" . htmlspecialchars($row["vendor"]) . "</td>
-                <td>" . htmlspecialchars($row["description"]) . "</td>
-                <td>" . htmlspecialchars($row["notes"]) . "</td>
-                <td>" . htmlspecialchars($row["sg"]) . "</td>
-                <td>₱" . htmlspecialchars($row["price"]) . "</td>
-                <td>" . htmlspecialchars($row["stock"]) . "</td>
-                <td>" . htmlspecialchars($row["product_age"]) . " days</td>
-                <td> <a href='product_transaction.php?id=" . $row["product_id"] . "' class='btn btn-primary mt-2'>View</a> </td> 
-                <!-- dapat dito na fefetch yung id sa purchase_order_items -->
-
-            </tr>";
-        }
-    } else {
-        echo "<tr><td colspan='9'>No products found.</td></tr>";
-    }
-    ?>
-</table>
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-
-<h3>Temporary Inventory</h3>
-
-
-<?php
-$sql = "SELECT * 
-FROM inventory
-
--- GROUP BY product_code"; // di ko maayos wthhhhhhhhhhhhhhhhhhhhhh
-
-$sql_query = mysqli_query($conn, $sql);
-?>
-
-<div>
-    <h3>Purchase Order Product Lists</h3>
-    <table class="table">
-        <tr>
-            <th>Date Received</th>
-            <th>Product Code</th>
-            <th>Lot Number</th>
-            <th>Category</th>
-            <th>Number of Cans</th>
-            <th>Pack Size</th>
-            <th>Liters</th>
-            <th>Reorder Level</th>
-            <th>Maintaining Level</th>
-            <th>Expiration Date</th>
-            <th>Manufacturer</th>
-            <th>Vendor</th>
-            <th>Description</th>
-            <th>Notes</th>
-            <th>SG</th>
-            <th>Action</th>
-        </tr>
-        <?php if (mysqli_num_rows($sql_query) > 0): ?>
-            <?php while ($row = mysqli_fetch_assoc($sql_query)): ?>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark text-center">
                 <tr>
-                    <td><?= $row['date_received'] ?></td>
-                    <td><?= $row['product_code'] ?></td>
-                    <td><?= $row['lot_no'] ?></td>
-                    <td><?= $row['category'] ?></td>
-                    <td><?= $row['no_of_cans'] ?></td>
-                    <td><?= $row['pack_size'] ?></td>
-                    <td><?= $row['liters'] ?></td>
-                    <td><?= $row['reorder_level'] ?></td>
-                    <td><?= $row['maintaining_level'] ?></td>
-                    <td><?= $row['expiration_date'] ?></td>
-                    <td><?= $row['manufacturer'] ?></td>
-                    <td><?= $row['vendor'] ?></td>
-                    <td><?= $row['description'] ?></td>
-                    <td><?= $row['notes'] ?></td>
-                    <td><?= $row['sg'] ?></td>
-                    <td>
-                        <button type="button"
-                            class="btn btn-success"
-                            data-bs-toggle="modal"
-                            data-bs-target="#viewProductModal"
-                            onclick="openProductModal('<?= htmlspecialchars($row['product_code']) ?>')">
-                            Click me
-                        </button>
-                    </td>
+                    <th>ID</th>
+                    <th>Date Received</th>
+                    <th>Product Code</th>
+                    <th>Lot No.</th>
+                    <th>Category</th>
+                    <th>No. of Cans</th>
+                    <th>Pack Size</th>
+                    <th>Liters</th>
+                    <th>Re-order Level</th>
+                    <th>Maintaining Level</th>
+                    <th>Expiration Date</th>
+                    <th>Manufacturer</th>
+                    <th>Vendor</th>
+                    <th>Description</th>
+                    <th style="min-width: 200px;">Notes</th>
+                    <th>SG</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Product Age</th>
+                    <th>Action</th>
                 </tr>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <tr>
-                <td colspan="17">No list of products available.</td>
-            </tr>
-        <?php endif; ?>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                <?php
+                $sql = "SELECT p.*, DATEDIFF(CURDATE(), p.date_received) AS product_age, po_i.product_id
+                        FROM products p
+                        LEFT JOIN purchase_order_items po_i ON p.id = po_i.product_id
+                        WHERE p.product_status = 'Verified'
+                        GROUP BY p.id";
+                $result = mysqli_query($conn, $sql);
 
-<div class="modal fade" id="viewProductModal" tabindex="-1" aria-labelledby="viewProductLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewProductLabel">View Product</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div style="overflow-x:auto;">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Date Received</th>
-                                <th>Product Code</th>
-                                <th>Lot Number</th>
-                                <th>Category</th>
-                                <th>Number of Cans</th>
-                                <th>Pack Size</th>
-                                <th>Liters</th>
-                                <th>Reorder Level</th>
-                                <th>Maintaining Level</th>
-                                <th>Expiration Date</th>
-                                <th>Manufacturer</th>
-                                <th>Vendor</th>
-                                <th>Description</th>
-                                <th>Notes</th>
-                                <th>SG</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productDataBody">
-                            <!-- Data will be inserted here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+                if (mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<tr>
+                            <td class='text-center'>" . htmlspecialchars($row["id"]) . "</td>
+                            <td>" . htmlspecialchars($row["date_received"]) . "</td>
+                            <td>" . htmlspecialchars($row["product_code"]) . "</td>
+                            <td>" . htmlspecialchars($row["lot_no"]) . "</td>
+                            <td>" . htmlspecialchars($row["category"]) . "</td>
+                            <td class='text-center'>" . htmlspecialchars($row["no_of_cans"]) . "</td>
+                            <td>" . htmlspecialchars($row["pack_size"]) . "</td>
+                            <td>" . htmlspecialchars($row["liters"]) . "</td>
+                            <td class='text-center'>" . htmlspecialchars($row["reorder_level"]) . "</td>
+                            <td class='text-center'>" . htmlspecialchars($row["maintaining_level"]) . "</td>
+                            <td>" . htmlspecialchars($row["expiration_date"]) . "</td>
+                            <td>" . htmlspecialchars($row["manufacturer"]) . "</td>
+                            <td>" . htmlspecialchars($row["vendor"]) . "</td>
+                            <td>" . htmlspecialchars($row["description"]) . "</td>
+                            <td style='min-width: 200px;'>" . htmlspecialchars($row["notes"]) . "</td>
+                            <td>" . htmlspecialchars($row["sg"]) . "</td>
+                            <td>₱" . number_format($row["price"], 2) . "</td>
+                            <td class='text-center'>" . htmlspecialchars($row["stock"]) . "</td>
+                            <td class='text-center'>" . htmlspecialchars($row["product_age"]) . " days</td>
+                            <td class='text-center'>
+                                <a href='product_transaction.php?id=" . htmlspecialchars($row["product_id"]) . "' class='btn btn-sm btn-primary'>
+                                    View
+                                </a>
+                            </td>
+                        </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='20' class='text-center text-muted'>No verified products found.</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
     </div>
 </div>
 
-<script>
-    function openProductModal(productId) {
-        const productDataBody = document.getElementById("productDataBody");
-        productDataBody.innerHTML = ""; // Clear existing content
-
-        // Find all rows that match the product ID
-        const rows = document.querySelectorAll("table tr");
-        rows.forEach(row => {
-            const codeCell = row.querySelector("td:nth-child(2)"); // Assuming product_code is in the 2nd column
-            if (codeCell && codeCell.textContent === productId) {
-                // Create a new row for each matching product
-                const newRow = document.createElement("tr");
-                newRow.innerHTML = `
-                    <td>${row.cells[0].textContent}</td>
-                    <td>${codeCell.textContent}</td>
-                    <td>${row.cells[2].textContent}</td>
-                    <td>${row.cells[3].textContent}</td>
-                    <td>${row.cells[4].textContent}</td>
-                    <td>${row.cells[5].textContent}</td>
-                    <td>${row.cells[6].textContent}</td>
-                    <td>${row.cells[7].textContent}</td>
-                    <td>${row.cells[8].textContent}</td>
-                    <td>${row.cells[9].textContent}</td>
-                    <td>${row.cells[10].textContent}</td>
-                    <td>${row.cells[11].textContent}</td>
-                    <td>${row.cells[12].textContent}</td>
-                    <td>${row.cells[13].textContent}</td>
-                    <td>${row.cells[14].textContent}</td>
-                `;
-                productDataBody.appendChild(newRow); // kita ko na problem, if nag remove ako sa taas, di nag didisplay yung sa modal
-            }
-        });
-    }
-</script>
 
 <?php include "includes/footer.php"; ?>
 

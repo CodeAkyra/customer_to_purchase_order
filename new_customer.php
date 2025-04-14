@@ -8,10 +8,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_btn'])) {
     $name = $_POST["name"];
     $email = $_POST["email"];
     $address = $_POST["address"];
+    $tin = $_POST["tin"];
 
     // Insert customer using prepared statement
-    $stmt = $conn->prepare("INSERT INTO customers (name, email, address) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $name, $email, $address);
+    $stmt = $conn->prepare("INSERT INTO customers (name, email, address, tin) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $name, $email, $address, $tin);
 
     if ($stmt->execute()) {
         $customer_id = $stmt->insert_id; // Get the last inserted customer ID
@@ -30,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_btn'])) {
             } else {
                 $sql = "INSERT INTO uploads (customer_id, filename, file_type, file_size) VALUES (?, ?, ?, ?)";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("isss", $customer_id, $filename, $fileType, $fileSize);
+                $stmt->bind_param("sss", $customer_id, $filename, $fileType, $fileSize);
 
                 if ($stmt->execute()) {
                     if (move_uploaded_file($tempfile, $folder)) {
@@ -60,6 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_btn'])) {
     Name: <input type="text" name="name" required><br>
     Email: <input type="text" name="email" required><br>
     Address: <input type="text" name="address" required><br>
+    Tax Identification Number: <input type="text" name="tin" required><br>
     <input type="file" class="form-control" name="choosefile">
     <button type="submit" class="btn btn-primary" name="submit_btn">Save</button>
     <a href="customer_information.php" class="btn btn-secondary">Back</a>

@@ -8,14 +8,14 @@ require "includes/conn.php";
 $po_id = $_GET['id'];
 
 // Fetch purchase order details with project details
-// $orderQuery = "SELECT po.id, po.customer_id, c.name, c.address, po.order_date, po.status, 
+// $orderQuery = "SELECT po.id, po.customer_id, c.name, c.address, po.date_of_cos, po.status, 
 //                       p.project_name, p.date_started, p.date_ended
 //                FROM purchase_orders po
 //                JOIN customers c ON po.customer_id = c.id 
 //                JOIN project p ON po.project_id = p.project_id
 //                WHERE po.id = $po_id";
 
-$orderQuery = "SELECT po.id, po.customer_id, po.project_id, po.order_date, po.status, po.delivery_address,
+$orderQuery = "SELECT po.id, po.customer_id, po.project_id, po.date_of_cos, po.status, po.delivery_address,
                       c.name, c.address, 
                       p.project_name, p.date_started, p.date_ended,
                       a.agent_code
@@ -58,80 +58,94 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<h2>Purchase Order Details</h2>
-<div id="printable_area">
+<h2 class="mb-4">Customer Order Slip Details</h2>
 
-    <p><strong>Agent:</strong> <?= $order['agent_code'] ?: 'No Agent Code' ?></p>
-    <p><strong>Customer:</strong> <?= $order['name'] ?: 'No Customer Name' ?></p>
-    <p><strong>Address:</strong> <?= $order['address'] ?: 'No Address' ?></p>
-    <p><strong>Delivery Address:</strong> <?= $order['delivery_address'] ?: 'No Delivery Address' ?></p>
-    <p><strong>Project Name:</strong> <?= $order['project_name'] ?: 'No Project Name' ?></p>
-    <p><strong>Project Date Started:</strong> <?= $order['date_started'] ?: 'No Date Started' ?></p>
-    <p><strong>Project Date Ended:</strong> <?= $order['date_ended'] ?: 'No Date Ended' ?></p>
-    <p><strong>Purchase Order Date:</strong> <?= $order['order_date'] ?: 'No Order Date' ?></p>
-    <p><strong>Purchase Order Status:</strong> <?= $order['status'] ?: 'No Status' ?></p>
-    <p><strong>Total Price:</strong> ₱<?= number_format($total_price, 2) ?></p>
+<div id="printable_area" class="container">
 
+    <!-- Customer & Project Info -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Customer & Project Information</h5>
+            <div class="row mb-2">
+                <div class="col-md-6"><strong>Agent:</strong> <?= $order['agent_code'] ?: 'No Agent Code' ?></div>
+                <div class="col-md-6"><strong>Customer:</strong> <?= $order['name'] ?: 'No Customer Name' ?></div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-6"><strong>Address:</strong> <?= $order['address'] ?: 'No Address' ?></div>
+                <div class="col-md-6"><strong>Delivery Address:</strong> <?= $order['delivery_address'] ?: 'No Delivery Address' ?></div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-6"><strong>Project Name:</strong> <?= $order['project_name'] ?: 'No Project Name' ?></div>
+                <div class="col-md-6"><strong>Date of COS:</strong> <?= $order['date_of_cos'] ?: 'No Order Date' ?></div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-6"><strong>Project Date Started:</strong> <?= $order['date_started'] ?: 'No Date Started' ?></div>
+                <div class="col-md-6"><strong>Project Date Ended:</strong> <?= $order['date_ended'] ?: 'No Date Ended' ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"><strong>Purchase Order Status:</strong> <?= $order['status'] ?: 'No Status' ?></div>
+                <div class="col-md-6"><strong>Total Price:</strong> ₱<?= number_format($total_price, 2) ?></div>
+            </div>
+        </div>
+    </div>
 
-    <!-- 
-MGA IDADAGDAG
-<p><strong>Deliver To:</strong>NULL</p>
-<p><strong>COS Number:</strong>NULL</p>
-<p><strong>Date:</strong>NULL</p>
-<p><strong>Terms:</strong>NULL</p>
-<p><strong>Credit Limit:</strong>NULL</p>
-<p><strong>Po No:</strong>NULL</p>
-<p><strong>Ordered By:</strong>NULL</p>
-<p><strong>TSR:</strong>NULL</p>
-<p><strong>Segment:</strong>NULL</p>
-<p><strong>Subsegment:</strong>NULL</p>
-<p><strong>VAT:</strong>NULL</p>
--->
+    <!-- Product Order List -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Product Order List</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Serial Code</th>
+                            <th>Lot Number</th>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($items as $row): ?>
+                            <tr>
+                                <td><?= $row["product_code"] ?></td>
+                                <td><?= $row["lot_no"] ?></td>
+                                <td><?= $row["description"] ?></td>
+                                <td><?= $row["quantity"] ?></td>
+                                <td>₱<?= number_format($row["price"], 2) ?></td>
+                                <td>₱<?= number_format($row["subtotal"], 2) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-    <h3>Product Order List</h3>
-    <table border="1" cellspacing="0" cellpadding="5" width="100%">
-        <tr>
-            <th>Serial Code</th>
-            <th>Lot Number</th>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Subtotal</th>
-        </tr>
-        <?php foreach ($items as $row): ?>
-            <tr>
-                <td><?= $row["product_code"] ?></td>
-                <td><?= $row["lot_no"] ?></td>
-                <td><?= $row["description"] ?></td>
-                <td><?= $row["quantity"] ?></td>
-                <td>₱<?= number_format($row["price"], 2) ?></td>
-                <td>₱<?= number_format($row["subtotal"], 2) ?></td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
+    <!-- Action Buttons -->
+    <div class="mb-4">
+        <button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
+
+        <?php if ($order["status"] == "Pending"): ?>
+            <form method="post" class="d-inline">
+                <button type="submit" class="btn btn-success">Approve Order</button>
+            </form>
+        <?php elseif ($order["status"] == "Delivery"): ?>
+            <p class="text-success d-inline"><strong>This order is out for delivery.</strong></p>
+        <?php elseif ($order["status"] == "Pending Balance"): ?>
+            <p class="text-warning d-inline"><strong>This order has a pending balance.</strong></p>
+        <?php elseif ($order["status"] == "Completed"): ?>
+            <p class="text-success d-inline"><strong>This order has already been completed.</strong></p>
+        <?php else: ?>
+            <p class="text-info d-inline"><strong>This order has already been approved.</strong></p>
+        <?php endif; ?>
+
+        <a href="view_history.php?id=<?= $order['customer_id'] ?>" class="btn btn-outline-secondary">← Back</a>
+        <a href="view_project.php?id=<?= $order['project_id'] ?>" class="btn btn-info">View Project PO</a>
+    </div>
+
 </div>
 
-<!-- Buttons -->
-<button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
-
-<!-- Complete Order Button (if not yet completed) -->
-<?php if ($order["status"] == "Pending"): ?>
-    <form method="post" style="display: inline;">
-        <button type="submit" class="btn btn-success">Approve Order</button>
-    </form>
-<?php elseif ($order["status"] == "Delivery"): ?>
-    <p class="text-success"><strong>This order is out for delivery.</strong></p>
-<?php elseif ($order["status"] == "Pending Balance"): ?>
-    <p class="text-success"><strong>This order has a pending balance.</strong></p>
-<?php elseif ($order["status"] == "Completed"): ?>
-    <p class="text-success"><strong>This order has already been completed.</strong></p>
-<?php else: ?>
-    <p class="text-success"><strong>This order has already been approved.</strong></p>
-<?php endif; ?>
-
-
-<a href="view_history.php?id=<?= $order['customer_id'] ?>" class="btn btn-secondary">Back</a>
-<a href="view_project.php?id=<?= $order['project_id'] ?>" class="btn btn-info">View Project PO</a>
 
 
 <!-- Include jsPDF and autoTable -->
@@ -159,7 +173,7 @@ MGA IDADAGDAG
             "Project Name: <?= $order['project_name'] ?>",
             "Project Date Started: <?= $order['date_started'] ?>",
             "Project Date Ended: <?= $order['date_ended'] ?>",
-            "Purchase Order Date: <?= $order['order_date'] ?>",
+            "Purchase Order Date: <?= $order['date_of_cos'] ?>",
             "Purchase Order Status: <?= $order['status'] ?>",
             "Total Price: <?= number_format($total_price, 2) ?>"
         ];
@@ -206,3 +220,20 @@ MGA IDADAGDAG
 <!-- dapat bawat PO meron unique ID, combination ng Date(YYYY), Name?(not sure) PO_ID siguro, -->
 
 <?php include "includes/footer.php"; ?>
+
+
+
+<!-- 
+MGA IDADAGDAG
+<p><strong>Deliver To:</strong>NULL</p>
+<p><strong>COS Number:</strong>NULL</p>
+<p><strong>Date:</strong>NULL</p>
+<p><strong>Terms:</strong>NULL</p>
+<p><strong>Credit Limit:</strong>NULL</p>
+<p><strong>Po No:</strong>NULL</p>
+<p><strong>Ordered By:</strong>NULL</p>
+<p><strong>TSR:</strong>NULL</p>
+<p><strong>Segment:</strong>NULL</p>
+<p><strong>Subsegment:</strong>NULL</p>
+<p><strong>VAT:</strong>NULL</p>
+-->

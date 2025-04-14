@@ -20,42 +20,48 @@ $result = mysqli_query($conn, $sql);
 ?>
 
 
-<h2>CUSTOMER MANAGEMENT</h2>
-<a href="new_customer.php" class="btn btn-success">New Customer</a>
+<h2 class="text-center mb-4">Customer Management</h2>
 
-<table class="table table-bordered text-center">
+<div class="text-center mb-4">
+    <a href="new_customer.php" class="btn btn-success">New Customer</a>
+</div>
 
-    <th>Name</th>
-    <th>Email</th>
-    <th>Address</th>
-    <th>Actions</th>
-    </tr>
-    <?php while ($row = mysqli_fetch_assoc($result)): ?>
-        <tr>
-
-            <td><?= $row["name"] ?></td>
-            <td><?= $row["email"] ?></td>
-            <td><?= $row["address"] ?></td>
-            <td>
-                <a href="edit_customer.php?id=<?= $row["id"] ?>" class="btn btn-warning">Edit</a>
-                <a href="view_history.php?id=<?= $row["id"] ?>" class="btn btn-info">View History</a>
-                <a href="create_po.php?customer_id=<?= $row["id"] ?>" class="btn btn-primary">Create PO</a>
-
-                <!-- View PDF Button (Only if file exists) -->
-                <?php if (!empty($row['filename'])): ?>
-                    <button class="btn btn-secondary" onclick="openPDF('includes/uploads/<?= $row["filename"] ?>')">View PDF</button>
-                <?php endif; ?>
-            </td>
-        </tr>
-    <?php endwhile; ?>
-</table>
+<div class="container">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                <tr>
+                    <td><?= $row["name"] ?></td>
+                    <td><?= $row["email"] ?></td>
+                    <td><?= $row["address"] ?></td>
+                    <td>
+                        <a href="edit_customer.php?id=<?= $row["id"] ?>" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="view_history.php?id=<?= $row["id"] ?>" class="btn btn-info btn-sm">View History</a>
+                        <a href="create_po.php?customer_id=<?= $row["id"] ?>" class="btn btn-primary btn-sm">Create PO</a>
+                        <?php if (!empty($row['filename'])): ?>
+                            <button class="btn btn-secondary btn-sm" onclick="openPDF('includes/uploads/<?= $row["filename"] ?>')">View PDF</button>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+        </tbody>
+    </table>
+</div>
 
 <!-- Bootstrap Modal for PDF Viewer -->
 <div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">PDF Viewer</h5>
+                <h5 class="modal-title" id="pdfModalLabel">PDF Viewer</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -72,6 +78,7 @@ $result = mysqli_query($conn, $sql);
         pdfModal.show();
     }
 </script>
+
 
 <?php
 

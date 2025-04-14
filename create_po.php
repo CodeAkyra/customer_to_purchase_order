@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $segment = $_POST['segment'];
     $sub_segment = $_POST['sub_segment'];
 
-    mysqli_query($conn, "INSERT INTO purchase_orders (customer_id, project_id, agent_id, segment, sub_segment, order_date, status) 
+    mysqli_query($conn, "INSERT INTO purchase_orders (customer_id, project_id, agent_id, segment, sub_segment, date_of_cos, status) 
                          VALUES ($customer_id, $project_id, $agent_id, '$segment', '$sub_segment', '$date', 'Pending')");
     $po_id = mysqli_insert_id($conn);
 
@@ -61,178 +61,173 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<h2>Create Customer Order Slip</h2>
-<p><strong>Customer:</strong> <?= $customer['name'] ?></p>
-<p><strong>Address:</strong> <?= $customer['address'] ?></p>
+<h2 class="text-center mb-4">Create Customer Order Slip</h2>
 
-<!-- Start Form -->
-<form method="post" id="orderForm">
+<div class="container">
+    <form method="post" id="orderForm">
 
-    <h3>Select Agent</h3>
-    <select name="agent_id" class="form-control" required>
-        <option value="" disabled selected>Select an Agent</option>
-        <?php while ($agent = mysqli_fetch_assoc($agentResult)): ?>
-            <option value="<?= $agent['id'] ?>"><?= $agent['agent_name'] ?> - <?= $agent['agent_code'] ?> (<?= $agent['area'] ?>)</option>
-        <?php endwhile; ?>
-    </select>
+        <div class="mb-4">
+            <h4 class="text-muted">Customer Information</h4>
+            <p><strong>Name:</strong> <?= $customer['name'] ?></p>
+            <p><strong>Address:</strong> <?= $customer['address'] ?></p>
+            <p><strong>TIN:</strong> <?= $customer['tin'] ?></p>
+        </div>
 
-    <h3>Select Segment</h3>
-    <select name="segment" class="form-control" required>
-        <option value="" disabled selected>Select Segment</option>
-        <option value="PROTECTIVE">PROTECTIVE</option>
-        <option value="MARINE">MARINE</option>
-    </select>
+        <div class="mb-4">
+            <label for="agent_id" class="form-label">Select Agent</label>
+            <select name="agent_id" class="form-select" required>
+                <option value="" disabled selected>Select an Agent</option>
+                <?php while ($agent = mysqli_fetch_assoc($agentResult)): ?>
+                    <option value="<?= $agent['id'] ?>"><?= $agent['agent_name'] ?> - <?= $agent['agent_code'] ?> (<?= $agent['area'] ?>)</option>
+                <?php endwhile; ?>
+            </select>
+        </div>
 
-    <h3>Select Sub-Segment</h3>
-    <select name="sub_segment" class="form-control" required>
-        <option value="" disabled selected>Select Sub-Segment</option>
-        <option value="FLOOR COATING">Floor Coating</option>
-        <option value="INFRASTRUCTURE">Infrastructure</option>
-        <option value="MINING">Mining</option>
-        <option value="OIL & GAS">Oil & Gas</option>
-        <option value="OTHERS">Others</option>
-        <option value="POWER PLANT">Power Plant</option>
-        <option value="LABOR">Labor</option>
-        <option value="CREDIT MEMO">Credit Memo</option>
-        <option value="DELIVERY CHARGE">Delivery Charge</option>
-        <option value="TECHNICAL CHARGE">Technical Charge</option>
-    </select>
+        <div class="mb-4">
+            <label for="segment" class="form-label">Select Segment</label>
+            <select name="segment" class="form-select" required>
+                <option value="" disabled selected>Select Segment</option>
+                <option value="PROTECTIVE">PROTECTIVE</option>
+                <option value="MARINE">MARINE</option>
+            </select>
+        </div>
 
-    <h3>Select Project</h3>
-    <div style="display: flex; align-items: center; gap: 10px;">
-        <select name="project_id" id="projectSelect" class="form-control" required>
-            <option value="" disabled selected>Select a project</option>
-            <?php while ($project = mysqli_fetch_assoc($projectResult)): ?>
-                <option value="<?= $project['project_id'] ?>"><?= $project['project_name'] ?></option>
-            <?php endwhile; ?>
-        </select>
-        <a href="create_project.php?customer_id=<?= $customer_id ?>" class="btn btn-primary">Create New Project</a>
-    </div>
+        <div class="mb-4">
+            <label for="sub_segment" class="form-label">Select Sub-Segment</label>
+            <select name="sub_segment" class="form-select" required>
+                <option value="" disabled selected>Select Sub-Segment</option>
+                <option value="FLOOR COATING">Floor Coating</option>
+                <option value="INFRASTRUCTURE">Infrastructure</option>
+                <option value="MINING">Mining</option>
+                <option value="OIL & GAS">Oil & Gas</option>
+                <option value="OTHERS">Others</option>
+                <option value="POWER PLANT">Power Plant</option>
+                <option value="LABOR">Labor</option>
+                <option value="CREDIT MEMO">Credit Memo</option>
+                <option value="DELIVERY CHARGE">Delivery Charge</option>
+                <option value="TECHNICAL CHARGE">Technical Charge</option>
+            </select>
+        </div>
 
-    <h3>Select Products</h3>
+        <div class="mb-4">
+            <label for="project_id" class="form-label">Select Project</label>
+            <div class="d-flex align-items-center gap-3">
+                <select name="project_id" id="projectSelect" class="form-select" required>
+                    <option value="" disabled selected>Select a Project</option>
+                    <?php while ($project = mysqli_fetch_assoc($projectResult)): ?>
+                        <option value="<?= $project['project_id'] ?>"><?= $project['project_name'] ?></option>
+                    <?php endwhile; ?>
+                </select>
+                <a href="create_project.php?customer_id=<?= $customer_id ?>" class="btn btn-outline-primary btn-sm">Create New Project</a>
+            </div>
+        </div>
 
-    <!-- Button to Open Modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal">
-        Select from Inventory
-    </button>
+        <div class="mb-4">
+            <label for="productSelect" class="form-label">Select Products</label>
+            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#productModal">
+                Choose from Inventory
+            </button>
+        </div>
 
-    <!-- Product Selection Modal -->
-    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="productModalLabel">Select Product from Inventory</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Search Bar -->
-                    <input type="text" id="searchBar" class="form-control" placeholder="Search product...">
-
-                    <table class="table" id="productTable">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Serial Code</th>
-                                <th>Lot Number</th>
-                                <th>Product</th>
-                                <th>Stock</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($product = mysqli_fetch_assoc($productResult)): ?>
+        <!-- Product Selection Modal -->
+        <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="productModalLabel">Select Product from Inventory</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="searchBar" class="form-control mb-4" placeholder="Search for a product...">
+                        <table class="table table-hover">
+                            <thead>
                                 <tr>
-                                    <td><?= $product['id'] ?></td>
-                                    <td><?= $product['product_code'] ?></td>
-                                    <td><?= $product['lot_no'] ?></td>
-                                    <td><?= $product['description'] ?></td>
-                                    <td><?= $product['stock'] ?></td>
-                                    <td>
-                                        <button class="btn btn-success add-to-table"
-                                            data-id="<?= $product['id'] ?>"
-                                            data-name="<?= $product['description'] ?>"
-                                            data-serial="<?= $product['product_code'] ?>"
-                                            data-lot="<?= $product['lot_no'] ?>"
-                                            data-stock="<?= $product['stock'] ?>">
-                                            Add
-                                        </button>
-                                    </td>
+                                    <th>ID</th>
+                                    <th>Product</th>
+                                    <th>Stock</th>
+                                    <th>Action</th>
                                 </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <?php while ($product = mysqli_fetch_assoc($productResult)): ?>
+                                    <tr>
+                                        <td><?= $product['id'] ?></td>
+                                        <td><?= $product['description'] ?></td>
+                                        <td><?= $product['stock'] ?></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success add-to-table"
+                                                data-id="<?= $product['id'] ?>"
+                                                data-name="<?= $product['description'] ?>"
+                                                data-stock="<?= $product['stock'] ?>">
+                                                Add
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Selected Products Table -->
-    <table class="table" id="selectedProductsTable">
-        <thead>
-            <tr>
-                <th>Product ID</th>
-                <th>Serial Code</th>
-                <th>Lot Number</th>
-                <th>Product</th>
-                <th>Available Stock</th>
-                <th>Quantity</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+        <!-- Selected Products Table -->
+        <div class="mb-4">
+            <label for="selectedProductsTable" class="form-label">Selected Products</label>
+            <table class="table table-bordered" id="selectedProductsTable">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Available Stock</th>
+                        <th>Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
 
-    <button type="submit" class="btn btn-success">Create COS</button>
-    <a href="customer_information.php" class="btn btn-secondary">Back</a>
-</form>
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">Create COS</button>
+            <a href="customer_information.php" class="btn btn-secondary">Back</a>
+        </div>
 
+    </form>
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const selectedProductsTable = document.querySelector("#selectedProductsTable tbody");
-        const projectSelect = document.querySelector("#projectSelect");
 
         document.querySelectorAll(".add-to-table").forEach(button => {
             button.addEventListener("click", function(event) {
-                event.preventDefault(); // Prevents form submission
+                event.preventDefault();
 
                 let productId = this.dataset.id;
                 let productName = this.dataset.name;
-                let serialCode = this.dataset.serial;
-                let lotNumber = this.dataset.lot;
                 let stock = this.dataset.stock;
 
-                let tableBody = document.querySelector("#selectedProductsTable tbody");
-
-                // Check if the product is already added
                 if (document.querySelector(`#row-${productId}`)) {
                     alert("Product is already added!");
                     return;
                 }
 
-                // Create table row
                 let newRow = document.createElement("tr");
                 newRow.id = `row-${productId}`;
                 newRow.innerHTML = `
-            <td>${productId}</td>
-            <td>${serialCode}</td>
-            <td>${lotNumber}</td>
-            <td>${productName}</td>
-            <td>${stock}</td>
-            <td>
-                <input type="number" name="products[${productId}]" min="1" max="${stock}" class="form-control" required>
-            </td>
-            <td>
-                <button type="button" class="btn btn-danger remove-product" data-id="${productId}">Remove</button>
-            </td>
-        `;
-
-                // Append to table
-                tableBody.appendChild(newRow);
+                    <td>${productName}</td>
+                    <td>${stock}</td>
+                    <td>
+                        <input type="number" name="products[${productId}]" min="1" max="${stock}" class="form-control" required>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-danger remove-product" data-id="${productId}">Remove</button>
+                    </td>
+                `;
+                selectedProductsTable.appendChild(newRow);
             });
         });
 
-        // Remove Product
         document.addEventListener("click", function(event) {
             if (event.target.classList.contains("remove-product")) {
                 let productId = event.target.dataset.id;
@@ -240,15 +235,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         });
 
-
-        // Search Function
         document.getElementById("searchBar").addEventListener("input", function() {
             let filter = this.value.toLowerCase();
-            document.querySelectorAll("#productTable tbody tr").forEach(row => {
+            document.querySelectorAll("#productModal tbody tr").forEach(row => {
                 row.style.display = row.innerText.toLowerCase().includes(filter) ? "" : "none";
             });
         });
     });
 </script>
+
 
 <?php include "includes/footer.php"; ?>
