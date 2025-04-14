@@ -10,19 +10,32 @@
 
 <body>
     <?php
-    $servername = "localhost";
-    $localname = "root";
-    $password = "";
-    // $dbname = "customer_to_purchase_order";
-    $dbname = "capsdb1";
+    // $servername = "localhost";
+    // $localname = "root";
+    // $password = "";
+    // // $dbname = "customer_to_purchase_order";
+    // $dbname = "capsdb1";
 
-    $conn = mysqli_connect($servername, $localname, $password, $dbname);
+    // $conn = mysqli_connect($servername, $localname, $password, $dbname);
 
-    if (!$conn) {
-        die("Connection Failed: " . mysqli_connect_error()); {
-        }
-    } else {
-        echo "Success!";
+    // if (!$conn) {
+    //     die("Connection Failed: " . mysqli_connect_error()); {
+    //     }
+    // } else {
+    //     echo "Success!";
+    // }
+
+    $servername = "srv1858.hstgr.io";
+    $username = "u881006464_inkote_test";
+    $password = "X5z0CzKjgcmQ51";
+    $dbname = "u881006464_test_db";
+    $port = "3306";
+
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    $conn = new mysqli($servername, $username, $password, $dbname, $port);
+    $conn->set_charset('utf8mb4');
+
+    if ($conn->connect_error) {
+        die('Error:' . $conn->connect_error);
     }
-
     ?>
