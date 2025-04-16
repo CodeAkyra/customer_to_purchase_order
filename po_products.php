@@ -13,9 +13,10 @@ $po_products_result = mysqli_query($conn, $po_products_list);
 
 ?>
 
-<a href="create_pop.php" class="btn btn-primary">Create PO Product</a>
+
 <div>
-    <h3>Purchase Order Product</h3>
+    <a href="create_pop.php" class="btn btn-primary">Create PO Product</a>
+    <h2 class="text-center mb-4">Purchase Order Product</h2>
     <table class="table">
         <tr>
             <th>ID</th>

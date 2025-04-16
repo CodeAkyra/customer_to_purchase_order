@@ -5,7 +5,7 @@ require "includes/conn.php";
 
 $po_id = $_GET['id'];
 
-$sqlDelivery = "SELECT po.id, po.customer_id, po.project_id, po.date_of_cos, po.status, po.delivery_address,
+$sqlDelivery = "SELECT po.id, po.segment, po.sub_segment, po.customer_id, po.project_id, po.date_of_cos, po.status, po.delivery_address,
                       c.name, c.address, 
                       p.project_name, p.date_started, p.date_ended,
                       a.agent_code
@@ -25,9 +25,11 @@ $itemsQuery = "SELECT p.id, p.product_code, p.lot_no, p.description, oi.quantity
 $itemsResult = mysqli_query($conn, $itemsQuery);
 
 $total_price = 0;
+$total_quantity = 0;
 $items = [];
 while ($row = mysqli_fetch_assoc($itemsResult)) {
     $total_price += $row["subtotal"];
+    $total_quantity += $row["quantity"];
     $items[] = $row;
 }
 
@@ -47,36 +49,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 ?>
 
-<h2 class="mb-4">Delivery Receipt</h2>
+<h2 class="text-center mb-4">Delivery Receipt</h2>
 
 <div id="printable_area" class="container">
+
+    <?php
+    $null = "<strong style='color: red;'> NULL </strong>";
+    // ayusin ko pa yung mga naka null, dapat may data na yan. try ko ma tapos lahat by today or until tomorrow
+    ?>
 
     <!-- Customer & Project Info -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body">
-            <h5 class="card-title mb-3">Customer & Project Information</h5>
             <div class="row mb-2">
-                <div class="col-md-6"><strong>Agent:</strong> <?= $result['agent_code'] ?: 'No Agent Code' ?></div>
                 <div class="col-md-6"><strong>Customer:</strong> <?= $result['name'] ?: 'No Customer Name' ?></div>
+                <div class="col-md-6"><strong>COS Number:</strong><?php echo $null ?></div>
             </div>
             <div class="row mb-2">
                 <div class="col-md-6"><strong>Address:</strong> <?= $result['address'] ?: 'No Address' ?></div>
-                <div class="col-md-6"><strong>Delivery Address:</strong> <?= $result['delivery_address'] ?: 'No Delivery Address' ?></div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-6"><strong>Project Name:</strong> <?= $result['project_name'] ?: 'No Project Name' ?></div>
                 <div class="col-md-6"><strong>Date of COS:</strong> <?= $result['date_of_cos'] ?: 'No Order Date' ?></div>
             </div>
             <div class="row mb-2">
-                <div class="col-md-6"><strong>Project Date Started:</strong> <?= $result['date_started'] ?: 'No Date Started' ?></div>
-                <div class="col-md-6"><strong>Project Date Ended:</strong> <?= $result['date_ended'] ?: 'No Date Ended' ?></div>
+                <div class="col-md-6"><strong>Delivery Address:</strong> <?= $result['delivery_address'] ?: 'No Delivery Address' ?></div>
+                <div class="col-md-6"><strong>Terms:</strong><?php echo $null ?></div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-6"><strong>Project Name:</strong> <?= $result['project_name'] ?: 'No Project Name' ?></div>
+                <div class="col-md-6"><strong>Credit Limit:</strong><?php echo $null ?></div>
             </div>
             <div class="row">
-                <div class="col-md-6"><strong>Purchase Order Status:</strong> <?= $result['status'] ?: 'No Status' ?></div>
-                <div class="col-md-6"><strong>Total Price:</strong> ₱<?= number_format($total_price, 2) ?></div>
+                <div class="col-md-6"><strong>Status:</strong> <?= $result['status'] ?: 'No Project Name' ?></div>
+                <div class="col-md-6"><strong>PO No.:</strong><?php echo $null ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6"><strong>Ordered By:</strong><?php echo $null ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6"><strong>TSR:</strong> <?= $result['agent_code'] ?: 'No Agent Code' ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6"><strong>Segment:</strong> <?= $result['segment'] ?: 'No Agent Code' ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6"><strong>Subsegment:</strong> <?= $result['sub_segment'] ?: 'No Agent Code' ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6"><strong>VAT:</strong><?php echo $null ?></div>
             </div>
         </div>
     </div>
+
+
 
     <!-- Product Order List -->
     <div class="card shadow-sm mb-4">
@@ -86,27 +114,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <table class="table table-bordered table-striped">
                     <thead class="thead-light">
                         <tr>
-                            <th>Serial Code</th>
-                            <th>Lot Number</th>
-                            <th>Product Name</th>
                             <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Subtotal</th>
+                            <th>Unit</th>
+                            <th>Item / Code</th>
+                            <th>Description</th>
+                            <th>Price / Liter</th>
+                            <!-- <th>Disc. (Discount)</th> ewan ko pa toh -->
+                            <th>Net Selling Price</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($items as $row): ?>
                             <tr>
-                                <td><?= $row["product_code"] ?></td>
-                                <td><?= $row["lot_no"] ?></td>
-                                <td><?= $row["description"] ?></td>
                                 <td><?= $row["quantity"] ?></td>
+                                <td> Liters </td>
+                                <td><?= $row["product_code"] ?></td>
+                                <td><?= $row["description"] ?></td>
                                 <td>₱<?= number_format($row["price"], 2) ?></td>
                                 <td>₱<?= number_format($row["subtotal"], 2) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                <div class="col-md-6"><strong>Total Quantity:</strong> <?= number_format($total_quantity) ?></div>
+                <div class="col-md-6"><strong>Total Price:</strong> ₱<?= number_format($total_price, 2) ?></div>
             </div>
         </div>
     </div>

@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<h2 class="mb-4">Customer Order Slip Details</h2>
+<h2 class="text-center mb-4">Customer Order Slip Details</h2>
 
 <div id="printable_area" class="container">
 
@@ -72,7 +72,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Customer & Project Info -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body">
-            <h5 class="card-title mb-3">Customer & Project Information</h5>
             <div class="row mb-2">
                 <div class="col-md-6"><strong>Customer:</strong> <?= $order['name'] ?: 'No Customer Name' ?></div>
                 <div class="col-md-6"><strong>COS Number:</strong><?php echo $null ?></div>
@@ -90,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="col-md-6"><strong>Credit Limit:</strong><?php echo $null ?></div>
             </div>
             <div class="row">
-                <div class="col-md-6"></div>
+                <div class="col-md-6"><strong>Status:</strong> <?= $order['status'] ?: 'No Project Name' ?></div>
                 <div class="col-md-6"><strong>PO No.:</strong><?php echo $null ?></div>
             </div>
             <div class="row">
@@ -178,10 +177,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 </div>
 
-
 <!-- Include jsPDF and autoTable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.21/jspdf.plugin.autotable.min.js"></script>
+
+<!-- working pero bulok yung out put pag nag ddownload ng pdf -->
 
 <script>
     function downloadPDF() {
@@ -193,25 +193,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Title
         doc.setFont("helvetica", "bold");
         doc.setFontSize(16);
-        doc.text("Customer Order Slip Details", 20, 20);
+        doc.text("Customer & Project Information", 20, 20);
 
-        // Customer & Order Details
+        // Customer & Project Details
         let y = 30;
         let details = [
-            "Customer: <?= $order['name'] ?: 'No Customer Name' ?>",
+            "Customer: " + ("<?= $order['name'] ?: 'No Customer Name' ?>"),
             "COS Number: NULL",
-            "Address: <?= $order['address'] ?: 'No Address' ?>",
-            "Date of COS: <?= $order['date_of_cos'] ?: 'No Order Date' ?>",
-            "Delivery Address: <?= $order['delivery_address'] ?: 'No Delivery Address' ?>",
+            "Address: " + ("<?= $order['address'] ?: 'No Address' ?>"),
+            "Date of COS: " + ("<?= $order['date_of_cos'] ?: 'No Order Date' ?>"),
+            "Delivery Address: " + ("<?= $order['delivery_address'] ?: 'No Delivery Address' ?>"),
             "Terms: NULL",
-            "Project Name: <?= $order['project_name'] ?: 'No Project Name' ?>",
+            "Project Name: " + ("<?= $order['project_name'] ?: 'No Project Name' ?>"),
             "Credit Limit: NULL",
             "PO No.: NULL",
             "Ordered By: NULL",
-            "TSR: <?= $order['agent_code'] ?: 'No Agent Code' ?>",
-            "Segment: <?= $order['segment'] ?: 'No Segment' ?>",
-            "Subsegment: <?= $order['sub_segment'] ?: 'No Subsegment' ?>",
-            "VAT: <?= $order['vat'] ?: 'No VAT' ?>"
+            "TSR: " + ("<?= $order['agent_code'] ?: 'No Agent Code' ?>"),
+            "Segment: " + ("<?= $order['segment'] ?: 'No Segment' ?>"),
+            "Subsegment: " + ("<?= $order['sub_segment'] ?: 'No Subsegment' ?>"),
+            "VAT: NULL"
         ];
 
         // Add details to the PDF
@@ -241,16 +241,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             body: rows,
             theme: 'grid',
             styles: {
-                fontSize: 10
+                fontSize: 10,
+                cellPadding: 3
             },
             headStyles: {
-                fillColor: [100, 100, 100]
+                fillColor: [100, 100, 100],
+                textColor: [255, 255, 255],
+                fontStyle: 'bold'
             }
         });
 
-        // Add total price
+        // Add total quantity and price
         y = doc.lastAutoTable.finalY + 10; // Position after the table
         doc.setFont("helvetica", "bold");
+        doc.text("Total Quantity: " + <?= number_format($total_quantity) ?>, 20, y);
+        y += 10;
         doc.text("Total Price: ₱<?= number_format($total_price, 2) ?>", 20, y);
 
         // Save PDF

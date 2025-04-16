@@ -8,14 +8,14 @@ $sqlApprove = "SELECT po.*, c.name AS customer_name, c.address AS customer_addre
                 LEFT JOIN customers c ON po.customer_id = c.id
                 LEFT JOIN agents a ON po.agent_id = a.id
                 LEFT JOIN project p ON po.project_id = p.project_id
-                WHERE po.status = 'Approved'
+                -- WHERE po.status = 'Approved' naisip ko, what if naka display nalang din lahat pero naka priority yung mga dapat unang makita sa module na yun.
                 GROUP BY po.id";
 
 $approvedResult = mysqli_query($conn, $sqlApprove);
 ?>
 
 <div>
-    <h3>Delivery Receipt Module</h3>
+    <h2 class="text-center mb-4">Delivery Receipt Module</h2>
     <table class="table">
         <tr>
             <th>Customer</th>

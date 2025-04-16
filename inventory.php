@@ -1,9 +1,9 @@
 <title>Inventory</title>
 <?php require "includes/conn.php"; ?>
 
-<h2>Inventory</h2>
+<h2 class="text-center mb-4">Inventory</h2>
 
-<!-- Search Product -->
+<!-- Search Product ( BROKEN )-->
 <form action="" method="get">
     <h3>SEARCH PRODUCT BY SERIAL CODE OR LOT NUMBER</h3>
     <label>Enter Product Code</label>
@@ -14,6 +14,8 @@
 
     <button type="submit" class="btn btn-primary mt-2">Search</button>
 </form>
+
+
 
 <?php
 if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
@@ -88,8 +90,6 @@ if (!empty($_GET['serialCode']) || !empty($_GET['lotNumber'])) {
 ?>
 
 <div class="container my-5">
-    <h2 class="text-center mb-4">Inventory Table</h2>
-
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle">
             <thead class="table-dark text-center">

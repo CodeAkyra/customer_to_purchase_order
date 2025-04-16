@@ -8,14 +8,14 @@ $sqlPending = "SELECT po.*, c.name AS customer_name, c.address AS customer_addre
                 LEFT JOIN customers c ON po.customer_id = c.id
                 LEFT JOIN agents a ON po.agent_id = a.id
                 LEFT JOIN project p ON po.project_id = p.project_id
-                WHERE po.status = 'Pending'
+                -- WHERE po.status = 'Pending'
                 GROUP BY po.id";
 
 $pendingResult = mysqli_query($conn, $sqlPending);
 ?>
 
 <div>
-    <h3>Customer Order Slip</h3>
+    <h2 class="text-center mb-4">Customer Order Slip</h2>
     <table class="table">
         <tr>
             <th>Customer</th>

@@ -13,8 +13,7 @@ $sql = "SELECT p.project_id, p.project_name, p.date_started, p.date_ended, c.nam
 
 $result = mysqli_query($conn, $sql);
 ?>
-
-<h2>PROJECTS</h2>
+<h2 class="text-center mb-4">Projects</h2>
 
 <table class="table">
     <tr>
