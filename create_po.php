@@ -29,9 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $agent_id = $_POST['agent_id'];
     $segment = $_POST['segment'];
     $sub_segment = $_POST['sub_segment'];
+    $vat = $_POST['vat'];
 
-    mysqli_query($conn, "INSERT INTO purchase_orders (customer_id, project_id, agent_id, segment, sub_segment, date_of_cos, status) 
-                         VALUES ($customer_id, $project_id, $agent_id, '$segment', '$sub_segment', '$date', 'Pending')");
+    mysqli_query($conn, "INSERT INTO purchase_orders (customer_id, project_id, agent_id, segment, sub_segment, vat, date_of_cos, status) 
+                         VALUES ($customer_id, $project_id, $agent_id, '$segment', '$sub_segment', '$vat' ,'$date', 'Pending')");
     $po_id = mysqli_insert_id($conn);
 
     foreach ($_POST['products'] as $product_id => $quantity) {
@@ -68,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <div class="mb-4">
             <h4 class="text-muted">Customer Information</h4>
-            <p><strong>Name:</strong> <?= $customer['name'] ?></p>
+            <p><strong>Customer:</strong> <?= $customer['name'] ?></p>
             <p><strong>Address:</strong> <?= $customer['address'] ?></p>
             <p><strong>TIN:</strong> <?= $customer['tin'] ?></p>
         </div>
@@ -106,6 +107,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <option value="CREDIT MEMO">Credit Memo</option>
                 <option value="DELIVERY CHARGE">Delivery Charge</option>
                 <option value="TECHNICAL CHARGE">Technical Charge</option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="vat" class="form-label">Select VAT</label>
+            <select name="vat" class="form-select" required>
+                <option value="" disabled selected>Select VAT</option>
+                <option value="Exclusive">EXCLUSIVE</option>
+                <option value="Inclusive">INCLUSIVE</option>
             </select>
         </div>
 

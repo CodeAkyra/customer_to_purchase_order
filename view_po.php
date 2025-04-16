@@ -15,7 +15,7 @@ $po_id = $_GET['id'];
 //                JOIN project p ON po.project_id = p.project_id
 //                WHERE po.id = $po_id";
 
-$orderQuery = "SELECT po.id, po.segment, po.sub_segment, po.customer_id, po.project_id, po.date_of_cos, po.status, po.delivery_address,
+$orderQuery = "SELECT po.id, po.segment, po.sub_segment, po.vat, po.customer_id, po.project_id, po.date_of_cos, po.status, po.delivery_address,
                       c.name, c.address, 
                       p.project_name, p.date_started, p.date_ended,
                       a.agent_code
@@ -102,15 +102,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="row">
                 <div class="col-md-6"></div>
-                <div class="col-md-6"><strong>Segment:</strong> <?= $order['segment'] ?: 'No Agent Code' ?></div>
+                <div class="col-md-6"><strong>Segment:</strong> <?= $order['segment'] ?: 'No Segment' ?></div>
             </div>
             <div class="row">
                 <div class="col-md-6"></div>
-                <div class="col-md-6"><strong>Subsegment:</strong> <?= $order['sub_segment'] ?: 'No Agent Code' ?></div>
+                <div class="col-md-6"><strong>Subsegment:</strong> <?= $order['sub_segment'] ?: 'No Subsegment' ?></div>
             </div>
             <div class="row">
                 <div class="col-md-6"></div>
-                <div class="col-md-6"><strong>VAT:</strong><?php echo $null ?></div>
+                <div class="col-md-6"><strong>VAT:</strong> <?= $order['vat'] ?: 'No VAT' ?></div>
             </div>
         </div>
     </div>
@@ -211,7 +211,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             "TSR: " + ("<?= $order['agent_code'] ?: 'No Agent Code' ?>"),
             "Segment: " + ("<?= $order['segment'] ?: 'No Segment' ?>"),
             "Subsegment: " + ("<?= $order['sub_segment'] ?: 'No Subsegment' ?>"),
-            "VAT: NULL"
+            "VAT: " + ("<?= $order['vat'] ?: 'No VAT' ?>")
         ];
 
         // Add details to the PDF
