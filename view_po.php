@@ -15,7 +15,7 @@ $po_id = $_GET['id'];
 //                JOIN project p ON po.project_id = p.project_id
 //                WHERE po.id = $po_id";
 
-$orderQuery = "SELECT po.id, po.customer_id, po.project_id, po.date_of_cos, po.status, po.delivery_address,
+$orderQuery = "SELECT po.id, po.segment, po.sub_segment, po.customer_id, po.project_id, po.date_of_cos, po.status, po.delivery_address,
                       c.name, c.address, 
                       p.project_name, p.date_started, p.date_ended,
                       a.agent_code
@@ -38,9 +38,11 @@ $itemsResult = mysqli_query($conn, $itemsQuery);
 
 // Initialize total price
 $total_price = 0;
+$total_quantity = 0;
 $items = [];
 while ($row = mysqli_fetch_assoc($itemsResult)) {
     $total_price += $row["subtotal"];
+    $total_quantity += $row["quantity"];
     $items[] = $row;
 }
 
@@ -62,32 +64,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div id="printable_area" class="container">
 
+    <?php
+    $null = "<strong style='color: red;'> NULL </strong>";
+    ?>
+
     <!-- Customer & Project Info -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body">
             <h5 class="card-title mb-3">Customer & Project Information</h5>
             <div class="row mb-2">
-                <div class="col-md-6"><strong>Agent:</strong> <?= $order['agent_code'] ?: 'No Agent Code' ?></div>
                 <div class="col-md-6"><strong>Customer:</strong> <?= $order['name'] ?: 'No Customer Name' ?></div>
+                <div class="col-md-6"><strong>COS Number:</strong><?php echo $null ?></div>
             </div>
             <div class="row mb-2">
                 <div class="col-md-6"><strong>Address:</strong> <?= $order['address'] ?: 'No Address' ?></div>
-                <div class="col-md-6"><strong>Delivery Address:</strong> <?= $order['delivery_address'] ?: 'No Delivery Address' ?></div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-6"><strong>Project Name:</strong> <?= $order['project_name'] ?: 'No Project Name' ?></div>
                 <div class="col-md-6"><strong>Date of COS:</strong> <?= $order['date_of_cos'] ?: 'No Order Date' ?></div>
             </div>
             <div class="row mb-2">
-                <div class="col-md-6"><strong>Project Date Started:</strong> <?= $order['date_started'] ?: 'No Date Started' ?></div>
-                <div class="col-md-6"><strong>Project Date Ended:</strong> <?= $order['date_ended'] ?: 'No Date Ended' ?></div>
+                <div class="col-md-6"><strong>Delivery Address:</strong> <?= $order['delivery_address'] ?: 'No Delivery Address' ?></div>
+                <div class="col-md-6"><strong>Terms:</strong><?php echo $null ?></div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-6"><strong>Project Name:</strong> <?= $order['project_name'] ?: 'No Project Name' ?></div>
+                <div class="col-md-6"><strong>Credit Limit:</strong><?php echo $null ?></div>
             </div>
             <div class="row">
-                <div class="col-md-6"><strong>Purchase Order Status:</strong> <?= $order['status'] ?: 'No Status' ?></div>
-                <div class="col-md-6"><strong>Total Price:</strong> ₱<?= number_format($total_price, 2) ?></div>
+                <div class="col-md-6"></div>
+                <div class="col-md-6"><strong>PO No.:</strong><?php echo $null ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6"><strong>Ordered By:</strong><?php echo $null ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6"><strong>TSR:</strong> <?= $order['agent_code'] ?: 'No Agent Code' ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6"><strong>Segment:</strong> <?= $order['segment'] ?: 'No Agent Code' ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6"><strong>Subsegment:</strong> <?= $order['sub_segment'] ?: 'No Agent Code' ?></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6"><strong>VAT:</strong><?php echo $null ?></div>
             </div>
         </div>
     </div>
+
+
 
     <!-- Product Order List -->
     <div class="card shadow-sm mb-4">
@@ -97,27 +125,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <table class="table table-bordered table-striped">
                     <thead class="thead-light">
                         <tr>
-                            <th>Serial Code</th>
-                            <th>Lot Number</th>
-                            <th>Product Name</th>
                             <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Subtotal</th>
+                            <th>Unit</th>
+                            <th>Item / Code</th>
+                            <th>Description</th>
+                            <th>Price / Liter</th>
+                            <!-- <th>Disc. (Discount)</th> ewan ko pa toh -->
+                            <th>Net Selling Price</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($items as $row): ?>
                             <tr>
-                                <td><?= $row["product_code"] ?></td>
-                                <td><?= $row["lot_no"] ?></td>
-                                <td><?= $row["description"] ?></td>
                                 <td><?= $row["quantity"] ?></td>
+                                <td> Liters </td>
+                                <td><?= $row["product_code"] ?></td>
+                                <td><?= $row["description"] ?></td>
                                 <td>₱<?= number_format($row["price"], 2) ?></td>
                                 <td>₱<?= number_format($row["subtotal"], 2) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                <div class="col-md-6"><strong>Total Quantity:</strong> <?= number_format($total_quantity) ?></div>
+                <div class="col-md-6"><strong>Total Price:</strong> ₱<?= number_format($total_price, 2) ?></div>
             </div>
         </div>
     </div>
@@ -147,7 +178,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 
-
 <!-- Include jsPDF and autoTable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.21/jspdf.plugin.autotable.min.js"></script>
@@ -157,48 +187,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         const {
             jsPDF
         } = window.jspdf;
-        let doc = new jsPDF();
+        const doc = new jsPDF();
 
         // Title
         doc.setFont("helvetica", "bold");
         doc.setFontSize(16);
-        doc.text("Purchase Order Details", 20, 20);
+        doc.text("Customer Order Slip Details", 20, 20);
 
         // Customer & Order Details
         let y = 30;
         let details = [
-            "Agents: <?= $order['agent_code'] ?>",
-            "Customer: <?= $order['description'] ?>",
-            "Address: <?= $order['address'] ?>",
-            "Project Name: <?= $order['project_name'] ?>",
-            "Project Date Started: <?= $order['date_started'] ?>",
-            "Project Date Ended: <?= $order['date_ended'] ?>",
-            "Purchase Order Date: <?= $order['date_of_cos'] ?>",
-            "Purchase Order Status: <?= $order['status'] ?>",
-            "Total Price: <?= number_format($total_price, 2) ?>"
+            "Customer: <?= $order['name'] ?: 'No Customer Name' ?>",
+            "COS Number: NULL",
+            "Address: <?= $order['address'] ?: 'No Address' ?>",
+            "Date of COS: <?= $order['date_of_cos'] ?: 'No Order Date' ?>",
+            "Delivery Address: <?= $order['delivery_address'] ?: 'No Delivery Address' ?>",
+            "Terms: NULL",
+            "Project Name: <?= $order['project_name'] ?: 'No Project Name' ?>",
+            "Credit Limit: NULL",
+            "PO No.: NULL",
+            "Ordered By: NULL",
+            "TSR: <?= $order['agent_code'] ?: 'No Agent Code' ?>",
+            "Segment: <?= $order['segment'] ?: 'No Segment' ?>",
+            "Subsegment: <?= $order['sub_segment'] ?: 'No Subsegment' ?>",
+            "VAT: <?= $order['vat'] ?: 'No VAT' ?>"
         ];
 
+        // Add details to the PDF
         doc.setFont("helvetica", "normal");
         doc.setFontSize(12);
-        details.forEach(text => {
-            doc.text(text, 20, y);
-            y += 10;
+        details.forEach((text, index) => {
+            doc.text(text, 20, y + (index * 10));
         });
 
         // Table Header
-        y += 10;
+        y += details.length * 10 + 10;
         doc.setFont("helvetica", "bold");
-        doc.text("Order List", 20, y);
+        doc.text("Product Order List", 20, y);
         y += 10;
 
         // Define table columns and rows
-        let columns = ["Serial Code", "Lot Number", "Product Name", "Quantity", "Price", "Subtotal"];
-        let rows = [
-            <?php foreach ($items as $row): ?>["<?= $row['product_code'] ?>", "<?= $row['lot_no'] ?>", "<?= $row['description'] ?>", "<?= $row['quantity'] ?>", "<?= number_format($row['price'], 2) ?>", "<?= number_format($row['subtotal'], 2) ?>"],
+        const columns = ["Quantity", "Unit", "Item / Code", "Description", "Price / Liter", "Net Selling Price"];
+        const rows = [
+            <?php foreach ($items as $row): ?>["<?= $row['quantity'] ?>", "Liters", "<?= $row['product_code'] ?>", "<?= $row['description'] ?>", "₱<?= number_format($row['price'], 2) ?>", "₱<?= number_format($row['subtotal'], 2) ?>"],
             <?php endforeach; ?>
         ];
 
-        // AutoTable for structured table formatting
+        // Use AutoTable for structured table formatting
         doc.autoTable({
             startY: y,
             head: [columns],
@@ -212,11 +247,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         });
 
+        // Add total price
+        y = doc.lastAutoTable.finalY + 10; // Position after the table
+        doc.setFont("helvetica", "bold");
+        doc.text("Total Price: ₱<?= number_format($total_price, 2) ?>", 20, y);
+
         // Save PDF
-        doc.save("Purchase_Order_<?= $po_id ?>.pdf");
+        doc.save("Purchase_Order_<?= $order['customer_id'] ?>.pdf");
     }
 </script>
-
 <!-- dapat bawat PO meron unique ID, combination ng Date(YYYY), Name?(not sure) PO_ID siguro, -->
 
 <?php include "includes/footer.php"; ?>
