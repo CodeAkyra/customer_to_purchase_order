@@ -66,6 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <?php
     $null = "<strong style='color: red;'> NULL </strong>";
+    // ayusin ko pa yung mga naka null, dapat may data na yan. try ko ma tapos lahat by today or until tomorrow
     ?>
 
     <!-- Customer & Project Info -->
