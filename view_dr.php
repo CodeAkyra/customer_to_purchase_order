@@ -5,7 +5,7 @@ require "includes/conn.php";
 
 $po_id = $_GET['id'];
 
-$sqlDelivery = "SELECT po.id, po.segment, po.sub_segment, po.customer_id, po.project_id, po.date_of_cos, po.status, po.delivery_address,
+$sqlDelivery = "SELECT po.id, po.segment, po.sub_segment, po.vat, po.customer_id, po.project_id, po.date_of_cos, po.status, po.delivery_address,
                       c.name, c.address, 
                       p.project_name, p.date_started, p.date_ended,
                       a.agent_code
@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result["status"] != "Completed") {
 
         // Update order status to "Completed"
-        $updateStatusQuery = "UPDATE purchase_orders SET status = 'Delivery' WHERE id = $po_id";
+        $updateStatusQuery = "UPDATE purchase_orders SET status = 'Delivered' WHERE id = $po_id";
         mysqli_query($conn, $updateStatusQuery);
 
         // Refresh the page to reflect the changes
@@ -99,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="row">
                 <div class="col-md-6"></div>
-                <div class="col-md-6"><strong>VAT:</strong><?php echo $null ?></div>
+                <div class="col-md-6"><strong>VAT:</strong> <?= $result['vat'] ?: 'No Agent Code' ?></div>
             </div>
         </div>
     </div>
@@ -152,7 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
         <?php elseif ($result["status"] == "Pending"): ?>
             <p class="text-warning d-inline"><strong>This order is not yet approved.</strong></p>
-        <?php elseif ($result["status"] == "Delivery"): ?>
+        <?php elseif ($result["status"] == "Delivered"): ?>
             <p class="text-info d-inline"><strong>This order is out for delivery.</strong></p>
         <?php elseif ($result["status"] == "Pending Balance"): ?>
             <p class="text-warning d-inline"><strong>This order has a pending balance.</strong></p>

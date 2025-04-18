@@ -161,7 +161,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <form method="post" class="d-inline">
                 <button type="submit" class="btn btn-success">Approve Order</button>
             </form>
-        <?php elseif ($order["status"] == "Delivery"): ?>
+        <?php elseif ($order["status"] == "Delivered"): ?>
             <p class="text-success d-inline"><strong>This order is out for delivery.</strong></p>
         <?php elseif ($order["status"] == "Pending Balance"): ?>
             <p class="text-warning d-inline"><strong>This order has a pending balance.</strong></p>

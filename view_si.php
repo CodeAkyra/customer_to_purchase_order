@@ -159,7 +159,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="mb-4">
         <button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
 
-        <?php if ($result["status"] == "Delivery"): ?>
+        <?php if ($result["status"] == "Delivered"): ?>
             <form method="post" class="d-inline">
                 <button type="submit" class="btn btn-success">Complete Order</button>
             </form>

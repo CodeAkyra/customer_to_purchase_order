@@ -41,6 +41,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="po_products.php">Purchase Order Products</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="test/inventory.php" style="color: red;"><strong>Inventory (TEST)</strong></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="test/view_pop_list.php?id=1" style="color: red;"><strong>VIEW PO (TEST)</strong></a>
+                </li>
             </ul>
         </div>
     </div>
